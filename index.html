@@ -191,7 +191,7 @@ function vHome(){const T=tdy(),ts=sessOn(T),nx=ts.find(x=>tm(x.e)>nowM());
  <div class="g2" style="margin-top:10px"><button class="cd" data-a="go:set"><span class="i">⚙️</span><b>تنظیمات و پشتیبان‌گیری</b></button><button class="cd" data-a="go:rpl:all"><span class="i">🗂</span><b>همه‌ی کارنامه‌ها</b><small>${fd(S.rp.length)} کارنامه</small></button></div>
  <button class="cd big acg" style="margin-top:10px" data-a="go:acc"><span class="i">💰</span><span><b style="font-size:18px">حساب</b><small>${acHome()}</small></span></button>
     <p class="m" style="text-align:center;margin-top:22px">${E(S.info.brand)} — ${E(S.info.teacher)}<br><span style="font-size:12px;opacity:.75">نسخه ${APPV}</span></p>`}
-const APPV='۲۵';
+const APPV='۲۶';
 const nowM=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 /* ----- برنامه کلاس‌ها ----- */
 const DC=['#e11d48','#2563eb','#16a34a','#7c3aed','#f97316','#0d9488','#db2777'],SH=['ش','ی','د','س','چ','پ','ج'],WDS=['شنبه','۱شنبه','۲شنبه','۳شنبه','۴شنبه','۵شنبه','جمعه'],dcs=j=>'--dc:'+DC[j],dnum=k=>+String(k).split('/')[2],dshort=k=>{const z=String(k).split('/').map(Number);return fd(z[2])+' '+MON[z[1]-1]};
@@ -310,7 +310,7 @@ function fileHtml(st){const id=st.id,q=stStats(id),R=q.R.slice(0,8),last=q.R[0];
  ${q.n?`<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">${stat('میانگین نمره‌ها',f1(q.avg)+' از ۲۰','#1d4ed8')}${stat('تعداد گزارش‌ها',fd(q.n),'#7c3aed')}${stat('آخرین نمره',f1(q.last),'#0d9488')}${stat('تغییر نسبت به قبل',q.d==null?'—':dBadge(q.d,1),'#d97706')}</div>${q.n>1?`<div style="${CARD}padding:12px 16px;margin-bottom:14px"><div style="font-weight:800;color:#14235c;font-size:16px">📈 روند نمره عملکرد در جلسه‌ها</div>${lineSvg(q.pts,680,160,'#1d4ed8')}</div>`:''}
  <div style="${CARD}padding:8px 18px;margin-bottom:14px">${R.map(r=>{const l=LV(r.sc);return`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px dashed #d6e2f7"><b style="flex:0 0 126px;font-size:14px;color:#1e3a8a">${E(dsh(r.date))}</b><span style="flex:1;font-size:15px">${E(r.title||r.subj||'جلسه')}${r.title&&r.subj?' • '+E(r.subj):''}</span><span style="background:${l.b};color:${l.c};border-radius:999px;padding:1px 12px;font-size:13px;font-weight:800">${l.t}</span><b style="flex:0 0 92px;white-space:nowrap;text-align:left;color:${l.c}">${f1(r.sc)} از ۲۰</b></div>`}).join('')}</div>
  <div style="${CARD}padding:14px 18px;border-right:7px solid #2563eb">${SECH('📝','توصیف آخرین جلسه ('+E(dsh(last.date))+')','#2563eb')}<div style="font-size:15.5px;line-height:2.05;color:#1f2d4d;text-align:justify">${E((last.desc&&last.desc.trim())||descr(last))}</div></div>`:`<div style="${CARD}color:#64748b;padding:16px 18px">هنوز گزارش عملکردی ثبت نشده است.</div>`}</div>${FOOT()}</div>`}
-function fileCap(st){const {wkl,one}=stSched(st.id),q=stStats(st.id);return['📁 پرونده تحصیلی — '+S.info.brand,'👤 '+st.n,q.n?'⭐ میانگین نمره‌ها: '+f1(q.avg)+' از ۲۰ ('+fd(q.n)+' گزارش) • آخرین: '+f1(q.last):'','— '+S.info.teacher].filter(Boolean).join('\n')}
+function fileCap(st){return['📝 گزارش عملکرد دانش‌آموز عزیز','👤 '+st.n,'📆 '+dsh(tdy()),'🏫 '+S.info.brand,'👨🏻\u200d🏫 '+S.info.teacher].join('\n')}
 async function fileSend(id){const st=stOf(id);if(!st)return;showImg(await mk(()=>htmlImg(fileHtml(st),760)),'parvandeh-'+st.n.replace(/\s+/g,'-')+'.jpg',fileCap(st),null,st)}
 
 /* ----- دوره پشتیبان ----- */
