@@ -58,6 +58,7 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 .top>*{position:relative}
 .cd.big{border-bottom:5px solid var(--y)}
 .cd.cc{border-top:5px solid var(--dc)}.cd.cc .i{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:var(--c);background:color-mix(in srgb,var(--dc) 16%,var(--c))}
+.hrow{display:flex;gap:8px;align-items:stretch;margin-bottom:10px}.hrow .calh{flex:1;margin:0;min-width:0}.ncb{flex:0 0 auto;border:0;border-radius:18px;background:var(--a);color:#fff;font-weight:800;padding:0 14px;font-size:15px;box-shadow:0 4px 12px #1d4ed844}@media(prefers-color-scheme:dark){.ncb{color:#0b1630}}
 .calh{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;background:linear-gradient(135deg,#14235c,#1f3a93 60%,#2d57c9);color:#fff;border-radius:18px;padding:10px 16px 14px;position:relative;overflow:hidden}
 .calh::after{content:'';position:absolute;left:14px;right:14px;bottom:0;height:5px;background:var(--y);border-radius:5px 5px 0 0}
 .calm b{font-size:23px;display:block;line-height:1.35}.calm span{font-size:13px;opacity:.85}
@@ -98,23 +99,24 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 #app.c{max-width:1700px}
 #app.c{display:flex;flex-wrap:wrap;align-items:center;gap:0 12px}
 #app.c>.top{flex:0 0 calc(100% + 44px);margin-bottom:8px;padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:6px}
-#app.c>.calh{flex:1 1 360px;margin:0 0 8px;padding:4px 16px 9px}
+#app.c>.hrow{flex:0 0 auto;margin:0 0 8px}#app.c .calh{padding:2px 12px 8px;border-radius:14px}#app.c .calm b{font-size:17px;line-height:1.3}#app.c .calm span{font-size:11.5px}#app.c .calt button{padding:3px 10px;font-size:12.5px}#app.c .ncb{padding:0 16px;font-size:14.5px}
+#app.c{padding-bottom:14px}
 #app.c>.nv{flex:1 1 360px;margin:0 0 8px}#app.c>.nv button{padding:5px 6px}
 #app.c>.wst{display:none}
-#app.c>*:not(.top):not(.calh):not(.nv):not(.fab){flex:0 0 100%}
-.dgrid{display:block}
-.dgrid .dcard{padding:5px 8px;margin-bottom:6px;gap:8px;align-items:center;border-radius:14px;border-right-width:5px}
+#app.c>*:not(.top):not(.hrow):not(.nv):not(.fab){flex:0 0 100%}
+.dgrid{display:flex;flex-direction:column;gap:6px;min-height:calc(100vh - 150px);min-height:calc(100dvh - 150px)}
+.dgrid .dcard{flex:1 1 0;min-height:max-content;padding:6px 8px;margin:0;gap:8px;align-items:center;border-radius:14px;border-right-width:5px}
 .dgrid .dbg{flex:0 0 46px;border-radius:10px;align-self:center}.dgrid .dbg span{font-size:10.5px;padding:0}.dgrid .dbg b{font-size:18px;line-height:1.25}
 .dgrid .dbd{display:flex;align-items:center;gap:10px}
 .dgrid .dh{flex:0 0 74px;flex-direction:column;align-items:center;gap:0;margin:0;text-align:center}.dgrid .dh b{font-size:15px;line-height:1.3}.dgrid .dh .m{margin:0;font-size:11px;line-height:1.3}.dgrid .dh em{font-size:10.5px;line-height:1.4;padding:0 7px}
-.dgrid .sgrid{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:6px}
-.dgrid .sgrid .ss{flex:0 1 calc((100% - 30px)/6);min-width:0;padding:4px 8px;border-radius:11px}
+.dgrid .sgrid{flex:1;min-width:0;display:flex;flex-wrap:wrap;gap:6px;align-items:stretch;align-content:center}
+.dgrid .sgrid .ss{flex:1 1 calc((100% - 30px)/6);max-width:calc((100% - 12px)/3);min-width:0;padding:6px 9px;border-radius:11px;display:flex;flex-direction:column;justify-content:center}
 .dgrid .ssb{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 6px;align-items:center}
 .dgrid .sbd{display:contents}
 .dgrid .tmb{display:flex;align-items:center;gap:3px;padding:0 7px;font-size:11px;line-height:1.7;border-radius:8px;grid-column:1;grid-row:1}.dgrid .tmb i{display:inline-block;width:6px;height:1.5px;margin:0}
-.dgrid .sbd>b{grid-column:2;grid-row:1;font-size:13px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dgrid .sbd>b{grid-column:2;grid-row:1;font-size:13.5px;line-height:1.45;white-space:normal;overflow:visible;word-break:break-word}
 .dgrid .opr{grid-column:1/-1;grid-row:2;justify-content:flex-start;margin:0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.dgrid .opr::-webkit-scrollbar{display:none}.dgrid .opr>*{flex:none}.dgrid .opr .bdg{white-space:nowrap;font-size:10.5px}.dgrid .wsk{white-space:nowrap;font-size:11px}
-.dgrid .sbd>.m{display:none}.dgrid .ss:has(.ac) .sbd>.m{display:block;grid-column:1/-1;font-size:11px}
+.dgrid .sbd>.m{display:none}.dgrid .sbd>.sn{display:block;grid-column:1/-1;grid-row:3;font-size:12.5px;line-height:1.5;color:var(--t);font-weight:600;white-space:normal}.dgrid .ss:has(.ac) .sbd>.m{display:block;grid-column:1/-1;font-size:11px}
 .dgrid .ss .ac{margin-top:4px}
 }
 #app.e{max-width:760px}#app.h{max-width:960px}
@@ -179,14 +181,15 @@ const nowM=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 const DC=['#e11d48','#2563eb','#16a34a','#7c3aed','#f97316','#0d9488','#db2777'],SH=['ش','ی','د','س','چ','پ','ج'],WDS=['شنبه','۱شنبه','۲شنبه','۳شنبه','۴شنبه','۵شنبه','جمعه'],dcs=j=>'--dc:'+DC[j],dnum=k=>+String(k).split('/')[2],dshort=k=>{const z=String(k).split('/').map(Number);return fd(z[2])+' '+MON[z[1]-1]};
 function mlen(y,m){let n=31;while(n>29&&+dadd(y+'/'+m+'/1',n-1).split('/')[1]!=m)n--;return n}
 const calHead=(mn,yr)=>`<div class="calh"><div class="calm"><b>${mn}</b><span>${yr}</span></div><div class="calt"><button class="${mv?'':'on'}" data-a="mv:0">هفتگی</button><button class="${mv?'on':''}" data-a="mv:1">ماهانه</button></div></div>`;
+const hdrRow=(mn,yr,k)=>`<div class="hrow">${calHead(mn,yr)}<button class="ncb" data-a="slNew:${k}">➕ کلاس جدید</button></div>`;
 const wsKey=(k,i)=>k+'|'+(i||'_');
 function wsTicks(x,k){const ids=(x.sids||[]).filter(stOf),W=x.ws||{},one=ids.length<2;
  const b=(i,t)=>`<button class="wsk${W[wsKey(k,i)]?' on':''}" data-a="wsT:${x.id}:${E(k)}:${i||'_'}" title="کاربرگ این جلسه"><i>${W[wsKey(k,i)]?'✓':''}</i>${t}</button>`;
  return ' <span class="wsr">'+(ids.length?ids.map(i=>b(i,'کاربرگ'+(one?'':' '+E(stN(i).split(' ')[0])))).join(''):b('','کاربرگ'))+'</span>'}
-function sessCard(x,k){const sid='sess'+x.id+k,g=x.kind=='grp';return`<div class="ss"><div class="ssb" data-a="op:${sid}"><div class="tmb">${fd(x.s)}<i></i>${fd(x.e)}</div><div class="sbd"><b>${E(x.t||'کلاس')}</b><div class="opr"><span class="bdg" style="${g?'background:#ede9fe;color:#6d28d9':'background:#dbeafe;color:#1d4ed8'}">${g?'گروهی':'خصوصی'}${x.rep=='o'?' • یک‌بار':''}</span>${wsTicks(x,k)}</div>${x.sids&&x.sids.length?'<div class="m">'+x.sids.map(stN).map(E).join('، ')+'</div>':''}${x.place?'<div class="m">📍 '+E(x.place)+'</div>':''}</div></div>`+(open==sid?`<div class="ac">${(x.sids||[]).filter(stOf).map(i=>`<button class="bt s" data-a="newrp:${i}:${E(k)}:${x.id}">📝 گزارش عملکرد ${E(stN(i).split(' ')[0])}</button>`).join('')}<button class="bt g s" data-a="slEdit:${x.id}:${k}">✏️ ویرایش</button>${x.rep!='o'?`<button class="bt g s" data-a="skip:${x.id}:${k}">⏸ لغو همین هفته</button>`:''}<button class="bt r s" data-a="slDel:${x.id}">🗑 حذف</button></div>`:'')+'</div>'}
+function sessCard(x,k){const sid='sess'+x.id+k,g=x.kind=='grp';return`<div class="ss"><div class="ssb" data-a="op:${sid}"><div class="tmb">${fd(x.s)}<i></i>${fd(x.e)}</div><div class="sbd"><b>${E(x.t||'کلاس')}</b><div class="opr"><span class="bdg" style="${g?'background:#ede9fe;color:#6d28d9':'background:#dbeafe;color:#1d4ed8'}">${g?'گروهی':'خصوصی'}${x.rep=='o'?' • یک‌بار':''}</span>${wsTicks(x,k)}</div>${x.sids&&x.sids.length?'<div class="m sn">'+x.sids.map(stN).map(E).join('، ')+'</div>':''}${x.place?'<div class="m pl">📍 '+E(x.place)+'</div>':''}</div></div>`+(open==sid?`<div class="ac">${(x.sids||[]).filter(stOf).map(i=>`<button class="bt s" data-a="newrp:${i}:${E(k)}:${x.id}">📝 گزارش عملکرد ${E(stN(i).split(' ')[0])}</button>`).join('')}<button class="bt g s" data-a="slEdit:${x.id}:${k}">✏️ ویرایش</button>${x.rep!='o'?`<button class="bt g s" data-a="skip:${x.id}:${k}">⏸ لغو همین هفته</button>`:''}<button class="bt r s" data-a="slDel:${x.id}">🗑 حذف</button></div>`:'')+'</div>'}
 function vSched(){const T=tdy();if(mv)return vMonth(T);
  const k0=dadd(wkStart(T),wk*7),mid=dadd(k0,3).split('/').map(Number);
- let h=top('برنامه کلاس‌ها','هفته‌ی '+dsh(k0)+' تا '+dsh(dadd(k0,6)))+calHead(MON[mid[1]-1],fd(mid[0]));
+ let h=top('برنامه کلاس‌ها','هفته‌ی '+dsh(k0)+' تا '+dsh(dadd(k0,6)))+hdrRow(MON[mid[1]-1],fd(mid[0]),k0);
  h+=`<div class="nv"><button data-a="wk:-1">▶ هفته قبل</button><button data-a="wk:0" class="mid">این هفته</button><button data-a="wk:1">هفته بعد ◀</button></div>`;
  let strip='',cards='';
  for(let j=0;j<7;j++){const k=dadd(k0,j),ss=sessOn(k),z=k.split('/').map(Number);
@@ -194,12 +197,12 @@ function vSched(){const T=tdy();if(mv)return vMonth(T);
   cards+=`<div class="dcard${k==T?' today':''}" id="d${k.replace(/\//g,'_')}" style="${dcs(j)}"><div class="dbg"><span>${MON[z[1]-1]}</span><b>${fd(z[2])}</b></div><div class="dbd"><div class="dh"><b>${WD[j]}</b>${k==T?'<em>امروز</em>':''}<span class="m">${ss.length?fd(ss.length)+' کلاس':'بدون کلاس'}</span></div>${ss.length?'<div class="sgrid">'+ss.map(x=>sessCard(x,k)).join('')+'</div>':'<div class="m" style="padding:0 2px 2px">روز استراحت 🌿</div>'}</div></div>`}
  h+=`<div class="wst">${strip}</div><div class="dgrid">${cards}</div>`;
  if(!S.sl.length)h+='<div class="emp">هنوز کلاسی ثبت نکرده‌اید. دکمه‌ی «کلاس جدید» را بزنید و روز و ساعت کلاس‌ها را وارد کنید.</div>';
- return h+`<button class="fab" data-a="slNew:${k0}">➕ کلاس جدید</button>`}
+ return h}
 function vMonth(T){const z=T.split('/').map(Number),ix=z[0]*12+z[1]-1+mo,y=Math.floor(ix/12),m=ix%12+1,f=y+'/'+m+'/1',n=mlen(y,m),off=wdi(f);let tot=0,g='';
  for(let j=0;j<7;j++)g+=`<div class="mh" style="${dcs(j)}">${SH[j]}</div>`;
  for(let i=0;i<off;i++)g+='<div class="mc e"></div>';
  for(let d=1;d<=n;d++){const k=y+'/'+m+'/'+d,j=(off+d-1)%7,c=sessOn(k).length;tot+=c;g+=`<button class="mc${c?' has':''}${k==T?' tdy':''}" style="${dcs(j)}" data-a="pickd:${k}"><b>${fd(d)}</b><span class="dt">${c?'<u></u>'.repeat(Math.min(c,4)):''}</span></button>`}
- return top('برنامه کلاس‌ها','نمای ماهانه')+calHead(MON[m-1],fd(y))+`<div class="nv"><button data-a="mo:-1">▶ ماه قبل</button><button data-a="mo:0" class="mid">این ماه</button><button data-a="mo:1">ماه بعد ◀</button></div><div class="k"><div class="mgr">${g}</div><p class="m" style="margin:10px 2px 0">هر نقطه یک کلاس است؛ روی هر روز بزنید تا برنامه‌ی همان هفته باز شود. • جمع این ماه: ${fd(tot)} کلاس</p></div><button class="fab" data-a="slNew:${T}">➕ کلاس جدید</button>`}
+ return top('برنامه کلاس‌ها','نمای ماهانه')+hdrRow(MON[m-1],fd(y),T)+`<div class="nv"><button data-a="mo:-1">▶ ماه قبل</button><button data-a="mo:0" class="mid">این ماه</button><button data-a="mo:1">ماه بعد ◀</button></div><div class="k"><div class="mgr">${g}</div><p class="m" style="margin:10px 2px 0">هر نقطه یک کلاس است؛ روی هر روز بزنید تا برنامه‌ی همان هفته باز شود. • جمع این ماه: ${fd(tot)} کلاس</p></div>`}
 function vSlEdit(){const d=D,ph=S.st;return top(d._new?'کلاس جدید':'ویرایش کلاس')+`<div class="k"><label class="f">عنوان یا درس</label><input data-f="t" value="${E(d.t)}" placeholder="مثلاً ریاضی هفتم — علی رضایی">
  <label class="f">نوع کلاس</label><div class="row"><button class="chip ${d.kind=='priv'?'on':''}" data-a="set:kind:priv">🧑‍🏫 خصوصی</button><button class="chip ${d.kind=='grp'?'on':''}" data-a="set:kind:grp">👥 گروهی</button></div>
  <label class="f">دانش‌آموزان این کلاس</label>${ph.length?`<div>${d.sids.filter(stOf).map(i=>`<button class="chip on" data-a="tgs:${i}">${E(stN(i))} ✕</button>`).join('')}</div><select id="sidAdd"><option value="">➕ انتخاب دانش‌آموز از لیست…</option>${ph.filter(q=>!d.sids.includes(q.id)).map(q=>`<option value="${q.id}">${E(q.n)}${q.course&&CRS[q.course]?' — '+CRS[q.course].n:''}</option>`).join('')}</select>`:'<p class="m">ابتدا از بخش «دانش‌آموزان» دانش‌آموزی اضافه کنید (انتخاب دانش‌آموز اختیاری است).</p>'}
