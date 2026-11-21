@@ -15,7 +15,7 @@
 html,body{margin:0}body{background-color:var(--bg);background-image:var(--bgi);background-attachment:fixed;color:var(--t);font-family:Yekan,Vazirmatn,Tahoma,system-ui,sans-serif;line-height:1.8;font-size:16px;padding-bottom:env(safe-area-inset-bottom)}
 #app{max-width:1700px;margin:0 auto;padding:0 14px 90px}
 .top{position:sticky;top:0;z-index:20;margin:0 -14px 18px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(135deg,#14235c,#1f3a93 60%,#2d57c9);color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 5px 0 #fbd23a,0 9px 16px #14235c33}
-.top b{font-size:18px;flex:1}.top .bn{display:block;font-size:11px;font-weight:400;opacity:.85;line-height:1.5}.top small{display:block;font-size:12px;opacity:.9;font-weight:400}
+.top{cursor:pointer}.top b{font-size:18px;flex:1}.top .bn{display:block;font-size:11px;font-weight:400;opacity:.85;line-height:1.5}.top small{display:block;font-size:12px;opacity:.9;font-weight:400}
 .top button{background:#ffffff26;color:#fff;border:0;border-radius:12px;width:40px;height:40px;font-size:20px;padding:0;width:40px}
 .logo{width:42px;height:42px;flex:0 0 42px}
 .k{background:var(--c);border:1px solid var(--l);border-radius:16px;padding:14px;margin-bottom:12px}
@@ -170,6 +170,8 @@ const lines=s=>String(s||'').split(/\n+/).map(x=>x.replace(/^[\s•\-*✓✅⚠�
 let V='home',VP={},ST=[],D=null,open=null,wk=0,navPop=false,mv=0,mo=0,selDay=null;
 function go(v,p){ST.push([V,VP,open]);V=v;VP=p||{};open=null;history.pushState({},'');render();scrollTo(0,0)}
 function back(){if(ST.length)history.back();else{V='home';VP={};render()}}
+function goHome(){ST=[];V='home';VP={};open=null;D=null;render();scrollTo(0,0)}
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.top');if(!t||V=='home')return;if(e.target.closest('button,a,input,select,textarea,label,[data-a]'))return;if(/Edit$/.test(V)&&!confirm('تغییرات ذخیره‌نشده از بین می‌رود. به منوی اصلی بروید؟'))return;goHome()});
 addEventListener('popstate',()=>{const x=ST.pop();if(x){V=x[0];VP=x[1];open=x[2];D=null}else{V='home';VP={}}render()});
 /* ===== نمایش ===== */
 const LOGO='<svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff"/><circle cx="32" cy="32" r="27" fill="#1d4ed8"/><path d="M14 24c6-3 12-3 18 1 6-4 12-4 18-1v22c-6-3-12-3-18 1-6-4-12-4-18-1z" fill="#fff"/><path d="M32 25v22" stroke="#1d4ed8" stroke-width="2"/><path d="M32 8l2.6 5.3 5.8.8-4.2 4.1 1 5.8L32 21.3l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="#fde047"/></svg>';
