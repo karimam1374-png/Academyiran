@@ -84,7 +84,23 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 .mc.has{background:color-mix(in srgb,var(--dc) 20%,var(--c))}.mc.tdy{outline:2.5px solid var(--dc);outline-offset:1px}.mc.e{visibility:hidden}
 .tabs button{padding:9px 10px;font-size:13.5px}
 .k{box-shadow:0 2px 8px #1f3a9312}
-</style></head><body><div id="app"></div><div id="ov"></div><div id="toast"></div>
+/* ===== چیدمان تبلت و صفحه‌ی عریض + تقویم شمسی ===== */
+#dp{position:fixed;inset:0;z-index:100;background:#0b1630cc;display:none;align-items:center;justify-content:center}#dp.on{display:flex}
+.dpb{background:var(--c);border-radius:20px;padding:14px;width:min(380px,94vw);box-shadow:0 10px 40px #0008}
+.dph{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.dph b{font-size:18px}.dph button{border:0;background:var(--soft);color:var(--a);border-radius:12px;width:42px;height:42px;font-size:18px}
+.dpg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.dpg .dpw{text-align:center;font-weight:800;font-size:13px;color:var(--a);padding:2px 0}
+.dpc{aspect-ratio:1;border-radius:12px;border:1.5px solid var(--l);background:var(--bg);color:var(--t);font:inherit;font-size:16px;padding:0}.dpc.tdy{border-color:var(--a);font-weight:800}.dpc.on{background:var(--a);color:#fff;border-color:var(--a)}
+@media(prefers-color-scheme:dark){.dpc.on{color:#0b1630}}
+#app.e{max-width:760px}#app.h{max-width:960px}
+@media(min-width:860px){
+#app{padding:0 22px 90px}.top{margin:0 -22px 18px;padding-left:22px;padding-right:22px}
+#app.w{max-width:1600px;display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:0 16px;align-items:start}
+#app.w>.top,#app.w>.sec,#app.w>.emp,#app.w>.full,#app.w>.bt,#app.w>.nv,#app.w>.tabs,#app.w>.calh,#app.w>.wst{grid-column:1/-1}
+#app.w>.nv,#app.w>.tabs,#app.w>.calh,#app.w>.wst{width:100%;max-width:760px;justify-self:center}
+#app.w>.bt{max-width:560px;justify-self:center}
+#app.w>.dcard,#app.w>.k{margin-bottom:16px}
+}
+</style></head><body><div id="app"></div><div id="dp"></div><div id="ov"></div><div id="toast"></div>
 <script>
 (function(){'use strict';
 /* ===== ابزارها ===== */
@@ -123,7 +139,7 @@ function top(t,sub,right){return`<div class="top">${V=='home'?LOGO:'<button data
 const nearBy=(e,k)=>e;
 function sessOn(key){const j=wdi(key);return S.sl.filter(x=>x.rep=='o'?x.date==key:(x.d==j&&key>=(x.from||'0/0/0')&&!(x.skip||[]).includes(key))&&jn(key)>=jn(x.from||'1/1/1')).sort((a,b)=>tm(a.s)-tm(b.s))}
 function sessKey(){return 0}
-function render(){const f={home:vHome,sched:vSched,slEdit:vSlEdit,stu:vStu,stEdit:vStEdit,rpl:vRpl,rpEdit:vRpEdit,course:vCourse,plEdit:vPlEdit,plView:vPlView,set:vSet,grep:vGrep}[V]||vHome;$('#app').innerHTML=f();if(V=='rpEdit')lvUpd();if(selDay){const e=document.getElementById('d'+selDay.replace(/\//g,'_'));selDay=null;if(e){e.scrollIntoView({block:'start'});e.classList.add('flash')}}}
+function render(){const f={home:vHome,sched:vSched,slEdit:vSlEdit,stu:vStu,stEdit:vStEdit,rpl:vRpl,rpEdit:vRpEdit,course:vCourse,plEdit:vPlEdit,plView:vPlView,set:vSet,grep:vGrep}[V]||vHome;$('#app').className=({sched:mv?'e':'w',stu:'w',rpl:'w',course:'w',grep:'w',home:'h'})[V]||'e';$('#app').innerHTML=f();if(V=='rpEdit')lvUpd();if(selDay){const e=document.getElementById('d'+selDay.replace(/\//g,'_'));selDay=null;if(e){e.scrollIntoView({block:'start'});e.classList.add('flash')}}}
 function vHome(){const T=tdy(),ts=sessOn(T),nx=ts.find(x=>tm(x.e)>nowM());
  const cnt=c=>S.st.filter(x=>x.course==c).length;
  return top('آکادمی ایران','کلاس‌های گروهی و خصوصی '+E(S.info.teacher))+
@@ -163,7 +179,7 @@ function vSlEdit(){const d=D,ph=S.st;return top(d._new?'کلاس جدید':'وی
  <label class="f">نوع کلاس</label><div class="row"><button class="chip ${d.kind=='priv'?'on':''}" data-a="set:kind:priv">🧑‍🏫 خصوصی</button><button class="chip ${d.kind=='grp'?'on':''}" data-a="set:kind:grp">👥 گروهی</button></div>
  <label class="f">دانش‌آموزان این کلاس</label>${ph.length?`<div>${d.sids.filter(stOf).map(i=>`<button class="chip on" data-a="tgs:${i}">${E(stN(i))} ✕</button>`).join('')}</div><select id="sidAdd"><option value="">➕ انتخاب دانش‌آموز از لیست…</option>${ph.filter(q=>!d.sids.includes(q.id)).map(q=>`<option value="${q.id}">${E(q.n)}${q.course&&CRS[q.course]?' — '+CRS[q.course].n:''}</option>`).join('')}</select>`:'<p class="m">ابتدا از بخش «دانش‌آموزان» دانش‌آموزی اضافه کنید (انتخاب دانش‌آموز اختیاری است).</p>'}
  <label class="f">تکرار</label><div class="row"><button class="chip ${d.rep=='w'?'on':''}" data-a="set:rep:w">🔁 هر هفته</button><button class="chip ${d.rep=='o'?'on':''}" data-a="set:rep:o">1️⃣ فقط یک‌بار</button></div>
- <label class="f">${d.rep=='o'?'روز (تاریخ دقیق)':'روز هفته'}</label>${d.rep=='o'?`<input data-f="date" inputmode="numeric" value="${E(fd(d.date||''))}" placeholder="۱۴۰۵/۹/۱۰"><p class="m">${okd(nd(d.date))?dlb(nd(d.date)):''}</p>`:`<div>${WD.map((w,i)=>`<button class="chip ${d.d==i?'on':''}" data-a="set:d:${i}">${w}</button>`).join('')}</div>`}
+ <label class="f">${d.rep=='o'?'روز (تاریخ دقیق)':'روز هفته'}</label>${d.rep=='o'?`<input data-f="date" inputmode="numeric" value="${E(fd(d.date||''))}" placeholder="۱۴۰۵/۹/۱۰"><button class="bt g s" data-a="dpo:date">📅 انتخاب از تقویم</button><p class="m">${okd(nd(d.date))?dlb(nd(d.date)):''}</p>`:`<div>${WD.map((w,i)=>`<button class="chip ${d.d==i?'on':''}" data-a="set:d:${i}">${w}</button>`).join('')}</div>`}
  <div class="row"><div><label class="f">ساعت شروع</label><input type="time" data-f="s" value="${E(d.s)}"></div><div><label class="f">ساعت پایان</label><input type="time" data-f="e" value="${E(d.e)}"></div></div>
  <label class="f">مکان یا لینک (اختیاری)</label><input data-f="place" value="${E(d.place)}" placeholder="مثلاً منزل دانش‌آموز / آنلاین"></div>
  <button class="bt" data-a="slSave">💾 ذخیره</button>`}
@@ -183,7 +199,7 @@ function rpList(ctx){return S.rp.filter(r=>ctx=='all'||(ctx=='priv'?(r.ctx=='pri
 function vRpl(){const ctx=VP.ctx||'priv',L=rpList(ctx),ttl=ctx=='all'?'همه‌ی کارنامه‌ها':ctx=='priv'?'کارنامه پایان جلسه':'کارنامه '+CRS[ctx].n;
  return top(ttl,fd(L.length)+' کارنامه')+(L.length?L.map(r=>{const l=LV(r.sc);return`<div class="k"><div class="row"><span class="sc n" style="background:${l.b};color:${l.c}">${fd(r.sc)}</span><div><b>${E(stN(r.sid))}</b><div class="m">${dsh(r.date)}${r.title?' • '+E(r.title):''}${r.subj?' • '+E(r.subj):''}</div><span class="bdg" style="background:${l.b};color:${l.c}">${l.t}</span> ${r.sent?'<span class="m">✓ ارسال‌شده</span>':''}</div></div><div class="ac" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap"><button class="bt s" data-a="rpSend:${r.id}">🖼 عکس و ارسال برای اولیا</button><button class="bt g s" data-a="rpEdit:${r.id}">✏️ ویرایش</button><button class="bt r s" data-a="rpDel:${r.id}">🗑</button></div></div>`}).join(''):'<div class="emp">هنوز کارنامه‌ای ساخته نشده است.</div>')+(ctx!='all'?`<button class="fab" data-a="newrp::${tdy()}:">➕ کارنامه جدید</button>`:'')}
 function vRpEdit(){const d=D,sl=S.sl.find(x=>x.id==d.slid),ids=sl?(sl.sids||[]):[],L=S.st.filter(s=>ids.includes(s.id)||s.id==d.sid||(d.ctx=='priv'||d.ctx=='grp'?(s.course=='priv'||s.course=='grp'):s.course==d.ctx));
- return top(d._new?'کارنامه جدید':'ویرایش کارنامه',CRS[d.ctx=='grp'?'priv':d.ctx].n)+`<div class="k"><label class="f">دانش‌آموز</label>${L.length?'<div>'+L.map(s=>`<button class="chip ${d.sid==s.id?'on':''}" data-a="set:sid:${s.id}">${E(s.n)}</button>`).join('')+'</div>':'<p class="m">ابتدا در «دانش‌آموزان» دانش‌آموزی از همین دوره اضافه کنید.</p>'}
+ return top(d._new?'کارنامه جدید':'ویرایش کارنامه',CRS[d.ctx=='grp'?'priv':d.ctx].n)+`<div class="k"><label class="f">دانش‌آموز</label>${L.length?sidSel(L,d.sid):'<p class="m">ابتدا در «دانش‌آموزان» دانش‌آموزی از همین دوره اضافه کنید.</p>'}
  <div class="row"><div><label class="f">تاریخ</label><input data-f="date" inputmode="numeric" value="${E(fd(d.date))}"></div><div><label class="f">جلسه یا موضوع</label><input data-f="title" value="${E(d.title)}" placeholder="مثلاً جلسه ۵"></div></div>
  <label class="f">درس</label><input data-f="subj" value="${E(d.subj)}" placeholder="مثلاً ریاضی">
  <label class="f">نمره عملکرد: <b id="scv"></b></label><input type="range" min="0" max="20" step="0.5" data-f="sc" value="${d.sc}"><div class="row"><span class="m" id="lvt"></span></div></div>
@@ -203,13 +219,19 @@ function vCourse(){const c=VP.c,tb=VP.tab||'dy',L=S.st.filter(s=>s.course==c);le
  return h}
 function curPlan(sid,T){const L=S.pl.filter(x=>x.sid==sid);return L.filter(p=>jn(T)>=jn(p.from)&&jn(T)<=jn(dadd(p.from,6))).sort((a,b)=>b.ts-a.ts)[0]||L.sort((a,b)=>jn(b.from)-jn(a.from)||b.ts-a.ts)[0]||null}
 function vDay(L){const T=tdy(),dd=VP.dd==null?wdi(T):+VP.dd;
- let h=`<div class="k" style="padding:10px 12px"><b>✅ تیک مطالعه‌ی روزانه</b><div class="m">روز را انتخاب کنید و جلوی هر درس که دانش‌آموز خوانده تیک بزنید؛ بعد گزارش را به‌صورت عکس بفرستید.</div></div><div class="wst">`+[0,1,2,3,4,5,6].map(j=>`<button class="wsd${j==dd?' tdy':''}" style="${dcs(j)}" data-a="dd:${j}"><small style="font-size:12px">${WDS[j]}</small><b style="font-size:10.5px;font-weight:700">${j==wdi(T)?'امروز':'&nbsp;'}</b></button>`).join('')+'</div>';
+ let h=`<div class="k full" style="padding:10px 12px"><b>✅ تیک مطالعه‌ی روزانه</b><div class="m">روز را انتخاب کنید و جلوی هر درس که دانش‌آموز خوانده تیک بزنید؛ بعد گزارش را به‌صورت عکس بفرستید.</div></div><div class="wst">`+[0,1,2,3,4,5,6].map(j=>`<button class="wsd${j==dd?' tdy':''}" style="${dcs(j)}" data-a="dd:${j}"><small style="font-size:12px">${WDS[j]}</small><b style="font-size:10.5px;font-weight:700">${j==wdi(T)?'امروز':'&nbsp;'}</b></button>`).join('')+'</div>';
  if(!L.length)return h+'<div class="emp">دانش‌آموزی در این دوره ثبت نشده است.</div>';
  return h+L.map(s=>{const p=curPlan(s.id,T);if(!p)return`<div class="k"><b>${E(s.n)}</b><div class="m">برنامه‌ی مطالعاتی ندارد.</div><button class="bt s" data-a="plNew:${s.id}">📚 ساخت برنامه</button></div>`;
   const R=(p.rows||[]).filter(r=>+r.d==dd||+r.d==7),dn=R.filter(r=>r.done).length,pc=R.length?Math.round(dn/R.length*100):0;
   return`<div class="k" style="${dcs(dd)};border-top:5px solid var(--dc)"><div class="row"><div><b>${E(s.n)}</b><div class="m">${WD[dd]} ${dshort(dadd(p.from,dd))} • ${E(p.title||'')}</div></div><b class="n" style="color:${pc==100?'var(--ok)':'var(--dc)'}">${R.length?fd(pc)+'٪':''}</b></div>`+(R.length?`<div class="pg"><i style="width:${pc}%;background:${pc==100?'var(--ok)':'var(--dc)'}"></i></div>`+R.map(r=>`<div class="ln"><button class="ck ${r.done?'on':''}" data-a="tick:${p.id}:${r.id}">${r.done?'✓':''}</button><div class="x"><b style="${r.done?'text-decoration:line-through;opacity:.7':''}">${E(r.s||r.t)}</b>${r.s&&r.t?'<div class="m">'+E(r.t)+'</div>':''}</div></div>`).join(''):'<div class="m" style="padding:6px 0">برای این روز موردی در برنامه نیست.</div>')+`<div class="row" style="margin-top:6px"><button class="bt s" data-a="rep:${p.id}:${dd}">🖼 گزارش این روز</button><button class="bt s g" data-a="rep:${p.id}:w">🖼 گزارش هفته</button><button class="bt s g n" data-a="plView:${p.id}">📋</button></div></div>`}).join('')}
 const plProg=p=>{const r=p.rows||[];return r.length?Math.round(r.filter(x=>x.done).length/r.length*100):0};
-function vPlEdit(){const d=D,c=VP.c,L=S.st.filter(s=>s.course==c);return top(d._new?'برنامه مطالعاتی جدید':'ویرایش برنامه',CRS[c].n)+`<div class="k"><label class="f">دانش‌آموز</label>${L.length?'<div>'+L.map(s=>`<button class="chip ${d.sid==s.id?'on':''}" data-a="set:sid:${s.id}">${E(s.n)}</button>`).join('')+'</div>':'<p class="m">ابتدا دانش‌آموزی در این دوره اضافه کنید.</p>'}
+let DPs=null;
+function dpShow(){const {y,m,f}=DPs,n=mlen(y,m),off=wdi(y+'/'+m+'/1'),sel=nd((D&&D[f])||''),T=tdy();let g=SH.map(x=>`<div class="dpw">${x}</div>`).join('');for(let i=0;i<off;i++)g+='<i></i>';for(let d=1;d<=n;d++){const k=y+'/'+m+'/'+d;g+=`<button class="dpc${k==sel?' on':''}${k==T?' tdy':''}" data-a="dpd:${k}">${fd(d)}</button>`}
+ const e=$('#dp');e.className='on';e.innerHTML=`<div class="dpb"><div class="dph"><button data-a="dpm:-1" aria-label="ماه قبل">▶</button><b>${MON[m-1]} ${fd(y)}</b><button data-a="dpm:1" aria-label="ماه بعد">◀</button></div><div class="dpg">${g}</div><div style="display:flex;gap:8px;margin-top:10px"><button class="bt g s" style="flex:1" data-a="dpd:${T}">امروز</button><button class="bt r s" style="flex:1" data-a="dpx">بستن</button></div></div>`}
+const dpClose=()=>{const e=$('#dp');e.className='';e.innerHTML='';DPs=null};
+document.addEventListener('click',e=>{if(e.target.id=='dp')dpClose()});
+const sidSel=(L,cur)=>`<select id="sidSel"><option value="">انتخاب دانش‌آموز از لیست…</option>${L.map(q=>`<option value="${q.id}"${q.id==cur?' selected':''}>${E(q.n)}</option>`).join('')}</select>`;
+function vPlEdit(){const d=D,c=VP.c,L=S.st.filter(s=>s.course==c);return top(d._new?'برنامه مطالعاتی جدید':'ویرایش برنامه',CRS[c].n)+`<div class="k"><label class="f">دانش‌آموز</label>${L.length?sidSel(L,d.sid):'<p class="m">ابتدا دانش‌آموزی در این دوره اضافه کنید.</p>'}
  <label class="f">عنوان برنامه</label><input data-f="title" value="${E(d.title)}" placeholder="مثلاً برنامه هفته‌ی اول آذر"><label class="f">تاریخ شروع (شنبه‌ی هفته)</label><input data-f="from" inputmode="numeric" value="${E(fd(d.from))}"></div>
  <div class="k"><h3>درس‌ها و مواردی که باید مطالعه کند</h3>${(d.rows||[]).map((r,i)=>`<div style="border-bottom:1px solid var(--l);padding:8px 0"><div class="row"><select data-f="rows.${i}.d" data-r="1">${WD.map((w,j)=>`<option value="${j}"${r.d==j?' selected':''}>${w}</option>`).join('')}<option value="7"${r.d==7?' selected':''}>هر روز</option></select><button class="bt r s n" data-a="rowDel:${i}">✕</button></div>
  <input data-f="rows.${i}.s" list="sj" value="${E(r.s)}" placeholder="درس"><textarea data-f="rows.${i}.t" style="min-height:60px" placeholder="چه مباحثی؟ مثلاً فصل ۳ صفحه ۴۰ تا ۵۵ و حل ۱۰ تمرین">${E(r.t)}</textarea><input data-f="rows.${i}.m" inputmode="numeric" value="${E(r.m?fd(r.m):'')}" placeholder="مدت مطالعه (دقیقه) — اختیاری"></div>`).join('')}<datalist id="sj">${SUBJ.map(s=>`<option value="${s}">`).join('')}</datalist><button class="bt g" data-a="rowAdd">➕ افزودن مورد مطالعه</button>${d._new?'<button class="bt g s" data-a="plCopy">📋 کپی از آخرین برنامه‌ی این دانش‌آموز</button>':''}</div>
@@ -227,7 +249,7 @@ function setPath(o,p,v){const a=p.split('.');for(let i=0;i<a.length-1;i++){o=o[a
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||!t.dataset.f)return;let v=t.value;const f=t.dataset.f;
  if(f.startsWith('info.')){setPath(S,f,v);save();return}if(!D)return;
  if(f=='sc'){D.sc=+v;lvUpd();return}if(/\.v$|\.m$/.test(f)||f=='date'||f=='from'||f=='phone')v=nd(v);setPath(D,f,v)});
-document.addEventListener('change',e=>{const t=e.target;if(t.id=='bkIn'){bkIn(t);return}if(t.id=='phIn'){phIn(t);return}if(t.id=='sidAdd'){if(D&&t.value&&!D.sids.includes(t.value))D.sids.push(t.value);render();return}if(!t.dataset||!t.dataset.f||!D)return;if(t.dataset.r){setPath(D,t.dataset.f,+t.value);render()}else if((t.dataset.f=='date'||t.dataset.f=='from')&&V!='set'){setPath(D,t.dataset.f,nd(t.value));if(V=='slEdit')render()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id=='bkIn'){bkIn(t);return}if(t.id=='phIn'){phIn(t);return}if(t.id=='sidSel'){if(D){D.sid=t.value}render();return}if(t.id=='sidAdd'){if(D&&t.value&&!D.sids.includes(t.value))D.sids.push(t.value);render();return}if(!t.dataset||!t.dataset.f||!D)return;if(t.dataset.r){setPath(D,t.dataset.f,+t.value);render()}else if((t.dataset.f=='date'||t.dataset.f=='from')&&V!='set'){setPath(D,t.dataset.f,nd(t.value));if(V=='slEdit')render()}});
 function startRp(sid,date,slid,ctx){const st=stOf(sid),sl=S.sl.find(x=>x.id==slid);D={_new:1,slid:slid||'',desc:'',id:uid(),ctx:ctx||(st?(st.course=='grp'?'grp':st.course):'priv'),sid:sid||'',date:date||tdy(),title:'',subj:sl?sl.t:'',sc:15,rows:[],str:'',wk:'',hw:'',note:'',sent:0,ts:Date.now()};if(sl&&!sid&&sl.sids&&sl.sids.length)D.sid=sl.sids[0];go('rpEdit',{})}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a.split(':'),k=a[0];
  if(k=='back')return back();
@@ -274,6 +296,10 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='dd'){VP.dd=+a[1];return render()}
  if(k=='rep')return repImg(a[1],a[2]);
  if(k=='wsT'){const x=S.sl.find(q=>q.id==a[1]);if(x){x.ws=x.ws||{};const kk=wsKey(a[2],a[3]=='_'?'':a[3]);if(x.ws[kk])delete x.ws[kk];else x.ws[kk]=1;save();render()}return}
+ if(k=='dpo'){const v=nd((D&&D[a[1]])||''),z=(okd(v)?v:tdy()).split('/').map(Number);DPs={f:a[1],y:z[0],m:z[1]};return dpShow()}
+ if(k=='dpm'){const ix=DPs.y*12+DPs.m-1+(+a[1]);DPs.y=Math.floor(ix/12);DPs.m=ix%12+1;return dpShow()}
+ if(k=='dpd'){if(DPs&&D)D[DPs.f]=a[1];dpClose();return render()}
+ if(k=='dpx')return dpClose();
  if(k=='phDel'){D.photo='';return render()}
  if(k=='gcs'){GC=a[1];return render()}
  if(k=='grImg')return grImg();
@@ -397,7 +423,7 @@ let GC='all';
 function grData(k0){const out=[];for(let j=0;j<7;j++){const k=dadd(k0,j),L=[];S.st.forEach(s=>{if(GC!='all'&&s.course!=GC)return;let dn=0,tot=0;S.pl.filter(p=>p.sid==s.id&&jn(k)>=jn(p.from)&&jn(k)<=jn(dadd(p.from,6))).forEach(p=>{const off=Math.round((gt(k)-gt(p.from))/864e5);(p.rows||[]).filter(r=>+r.d==off).forEach(r=>{tot++;if(r.done)dn++})});if(dn)L.push({s,dn,tot})});L.sort((a,b)=>String(a.s.n).localeCompare(String(b.s.n),'fa'));out.push({j,k,L})}return out}
 function vGrep(){const T=tdy(),k0=dadd(wkStart(T),wk*7),W7=grData(k0),all=new Set();W7.forEach(d=>d.L.forEach(x=>all.add(x.s.id)));
  let h=top('گزارش عمومی مطالعه','هفته‌ی '+dsh(k0)+' تا '+dsh(dadd(k0,6)))+`<div class="nv"><button data-a="wk:-1">▶ هفته قبل</button><button data-a="wk:0" class="mid">این هفته</button><button data-a="wk:1">هفته بعد ◀</button></div>
- <div class="k" style="padding:10px 12px"><div class="m">فقط دانش‌آموزانی که حداقل یک مورد از برنامه‌شان را «انجام شد» تیک زده‌اید، زیر آن روز می‌آیند.</div><div style="margin-top:6px"><button class="chip ${GC=='all'?'on':''}" data-a="gcs:all">همه</button>${Object.keys(CRS).map(c=>`<button class="chip ${GC==c?'on':''}" data-a="gcs:${c}">${CRS[c].n}</button>`).join('')}</div><div class="m" style="margin-top:6px">${fd(all.size)} دانش‌آموز در این هفته مطالعه کرده‌اند</div></div>`;
+ <div class="k full" style="padding:10px 12px"><div class="m">فقط دانش‌آموزانی که حداقل یک مورد از برنامه‌شان را «انجام شد» تیک زده‌اید، زیر آن روز می‌آیند.</div><div style="margin-top:6px"><button class="chip ${GC=='all'?'on':''}" data-a="gcs:all">همه</button>${Object.keys(CRS).map(c=>`<button class="chip ${GC==c?'on':''}" data-a="gcs:${c}">${CRS[c].n}</button>`).join('')}</div><div class="m" style="margin-top:6px">${fd(all.size)} دانش‌آموز در این هفته مطالعه کرده‌اند</div></div>`;
  W7.forEach(d=>{h+=`<div class="k" style="${dcs(d.j)};border-top:5px solid var(--dc)"><div class="row"><b>${WD[d.j]} ${dshort(d.k)}</b><span class="m">${d.L.length?fd(d.L.length)+' نفر':''}</span></div>`+(d.L.length?`<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">${d.L.map(x=>`<div style="text-align:center;width:76px"><div style="display:flex;justify-content:center">${av(x.s,52)}</div><div class="m" style="font-size:12px;line-height:1.3;margin-top:3px">${E(x.s.n)}</div></div>`).join('')}</div>`:'<div class="m" style="padding:4px 0">کسی مطالعه‌ای ثبت نکرده است.</div>')+'</div>'});
  return h+`<button class="bt" data-a="grImg">🖼 ساخت عکس گزارش عمومی و ارسال</button>`}
 function grHtml(k0){const W7=grData(k0),all=new Set();W7.forEach(d=>d.L.forEach(x=>all.add(x.s.id)));
