@@ -24,6 +24,9 @@
 .gi{display:inline-block;width:50px;padding:6px 2px;text-align:center;border:1px solid var(--l);border-radius:8px;font:inherit;background:#fff;margin:0;color:var(--t)}
 .gi.t{width:170px;text-align:right;padding:6px 8px}
 .gi:focus{outline:2px solid var(--a2)}.wsr{display:contents}.opr{display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px;margin-top:2px}.opr .wsk{margin:0}.wsk{display:inline-flex;align-items:center;gap:5px;border:1.5px solid #cbd5e1;background:#f1f5f9;color:#94a3b8;border-radius:999px;padding:1px 9px 1px 4px;font:inherit;font-size:12px;font-weight:700;margin:2px 2px}.wsk i{width:17px;height:17px;border-radius:50%;border:2px solid #cbd5e1;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;color:#fff}.wsk.on{background:#dcfce7;border-color:#16a34a;color:#15803d}.wsk.on i{background:#16a34a;border-color:#16a34a}
+.top button.bkh{background:#fbd23a;color:#14235c;font-weight:800;font-size:22px}
+.bkf{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:15;border:3px solid #fbd23a;border-radius:999px;background:#14235c;color:#fff;font-weight:800;font-size:15px;padding:10px 18px 10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 6px 18px #14235c66}
+.bkf span{font-size:24px;line-height:1;color:#fbd23a}
 </style>
 <style>
 :root{--bg:#eaf3ff;--bgi:linear-gradient(180deg,#d9eaff 0,#eef5ff 38%,#fff6df 100%);--y:#fbd23a;--c:#fff;--t:#14224f;--m:#5a6a93;--a:#1f3a93;--a2:#3b6fe0;--l:#cfdff8;--soft:#e4edff;--ok:#15803d;--okb:#dcfce7;--wn:#b45309;--wnb:#fef3c7;--bd:#b91c1c;--bdb:#fee2e2;box-sizing:border-box}
@@ -218,24 +221,24 @@ if(!S||typeof S!='object')S={};
 S.info=Object.assign({teacher:'استاد کریم‌تبار',brand:'آکادمی ایران',phone:''},S.info||{});['st','sl','rp','pl','gp','ac','ev'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
 let svT=0;const save=()=>{clearTimeout(svT);svT=setTimeout(flush,150)},flush=()=>{clearTimeout(svT);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('⚠ ذخیره‌سازی ناموفق بود؛ از تنظیمات پشتیبان بگیرید.')}};
 addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')flush()});
-function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+function toast(t){if(t==='✓ ذخیره شد'){clearTimeout(dfT);try{localStorage.removeItem(KEY+'.draft')}catch(e){}}const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
 const stN=id=>(S.st.find(x=>x.id==id)||{n:'(حذف‌شده)'}).n,stOf=id=>S.st.find(x=>x.id==id);
 const LV=sc=>sc>=18?{t:'عالی',c:'#15803d',b:'#dcfce7'}:sc>=15?{t:'خیلی خوب',c:'#1d4ed8',b:'#dbeafe'}:sc>=12?{t:'خوب',c:'#0e7490',b:'#cffafe'}:sc>=10?{t:'قابل قبول',c:'#b45309',b:'#fef3c7'}:{t:'نیازمند تلاش بیشتر',c:'#b91c1c',b:'#fee2e2'};
 const lines=s=>String(s||'').split(/\n+/).map(x=>x.replace(/^[\s•\-*✓✅⚠️]+/,'').trim()).filter(Boolean);
 /* ===== ناوبری ===== */
 let V='home',VP={},ST=[],D=null,open=null,wk=0,navPop=false,mv=0,mo=0,selDay=null;
 function go(v,p){ST.push([V,VP,open]);V=v;VP=p||{};open=null;history.pushState({},'');render();scrollTo(0,0)}
-function back(){if(ST.length)history.back();else{V='home';VP={};render()}}
+function back(){if(ST.length)history.back();else{dfClear();V='home';VP={};render()}}
 function goHome(){ST=[];V='home';VP={};open=null;D=null;render();scrollTo(0,0)}
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.top');if(!t||V=='home')return;if(e.target.closest('button,a,input,select,textarea,label,[data-a]'))return;if(/Edit$/.test(V)&&!confirm('تغییرات ذخیره‌نشده از بین می‌رود. به منوی اصلی بروید؟'))return;goHome()});
-addEventListener('popstate',()=>{if(WSF){wsfClose();return}const x=ST.pop();if(x){V=x[0];VP=x[1];open=x[2];D=null}else{V='home';VP={}}render()});
+addEventListener('popstate',()=>{if(WSF){wsfClose();return}dfClear();const x=ST.pop();if(x){V=x[0];VP=x[1];open=x[2];D=null}else{V='home';VP={}}render()});
 /* ===== نمایش ===== */
 const LOGO='<svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff"/><circle cx="32" cy="32" r="27" fill="#1d4ed8"/><path d="M14 24c6-3 12-3 18 1 6-4 12-4 18-1v22c-6-3-12-3-18 1-6-4-12-4-18-1z" fill="#fff"/><path d="M32 25v22" stroke="#1d4ed8" stroke-width="2"/><path d="M32 8l2.6 5.3 5.8.8-4.2 4.1 1 5.8L32 21.3l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="#fde047"/></svg>';
-function top(t,sub,right){return V=='home'?`<div class="top">${LOGO}<b>${t}${sub?'<small>'+sub+'</small>':''}</b>${right||''}</div>`:`<div class="top"><button data-a="back" aria-label="بازگشت">→</button><b class="bb">آکادمی ایران<small>آموزش و پرورش ایران فردا</small></b><span class="tt">${t}${sub?'<small> • '+sub+'</small>':''}</span>${right||''}</div>`}
+function top(t,sub,right){return V=='home'?`<div class="top">${LOGO}<b>${t}${sub?'<small>'+sub+'</small>':''}</b>${right||''}</div>`:`<div class="top"><button class="bkh" data-a="back" aria-label="بازگشت">↩</button><b class="bb">آکادمی ایران<small>آموزش و پرورش ایران فردا</small></b><span class="tt">${t}${sub?'<small> • '+sub+'</small>':''}</span>${right||''}</div>`}
 const nearBy=(e,k)=>e;
 function sessOn(key){const j=wdi(key);return S.sl.filter(x=>x.rep=='o'?x.date==key:(x.d==j&&key>=(x.from||'0/0/0')&&!(x.skip||[]).includes(key))&&jn(key)>=jn(x.from||'1/1/1')).sort((a,b)=>tm(a.s)-tm(b.s))}
 function sessKey(){return 0}
-function render(){const f={home:vHome,sched:vSched,slEdit:vSlEdit,stu:vStu,stEdit:vStEdit,rpl:vRpl,rpEdit:vRpEdit,files:vFiles,file:vFile,course:vCourse,plEdit:vPlEdit,plView:vPlView,gpEdit:vGpEdit,gpView:vGpView,set:vSet,acc:vAcc,acEdit:vAcEdit,ev:vEv,evEdit:vEvEdit,evGrid:vEvGrid}[V]||vHome;$('#app').className=({sched:mv?'e':'c',stu:'w',rpl:'w',course:'w',ev:'w',evGrid:'xg',home:'h'})[V]||'e';$('#app').innerHTML=f();if(V=='rpEdit'||(V=='evEdit'&&D&&D.k=='pro'))lvUpd();if(selDay){const e=document.getElementById('d'+selDay.replace(/\//g,'_'));selDay=null;if(e){e.scrollIntoView({block:'start'});e.classList.add('flash')}}}
+function render(){const f={home:vHome,sched:vSched,slEdit:vSlEdit,stu:vStu,stEdit:vStEdit,rpl:vRpl,rpEdit:vRpEdit,files:vFiles,file:vFile,course:vCourse,plEdit:vPlEdit,plView:vPlView,gpEdit:vGpEdit,gpView:vGpView,set:vSet,acc:vAcc,acEdit:vAcEdit,ev:vEv,evEdit:vEvEdit,evGrid:vEvGrid}[V]||vHome;$('#app').className=({sched:mv?'e':'c',stu:'w',rpl:'w',course:'w',ev:'w',evGrid:'xg',home:'h'})[V]||'e';$('#app').innerHTML=f()+(V=='home'?'':'<button class="bkf" data-a="back" aria-label="بازگشت"><span>↩</span> بازگشت</button>');if(V=='set')bkFill();if(V=='rpEdit'||(V=='evEdit'&&D&&D.k=='pro'))lvUpd();if(selDay){const e=document.getElementById('d'+selDay.replace(/\//g,'_'));selDay=null;if(e){e.scrollIntoView({block:'start'});e.classList.add('flash')}}}
 function vHome(){const T=tdy(),ts=sessOn(T),nx=ts.find(x=>tm(x.e)>nowM());
  const cnt=c=>S.st.filter(x=>inC(x,c)).length;
  return top('آکادمی ایران','آموزش و پرورش ایران فردا')+
@@ -245,7 +248,7 @@ function vHome(){const T=tdy(),ts=sessOn(T),nx=ts.find(x=>tm(x.e)>nowM());
  <div class="g2" style="margin-top:10px"><button class="cd" data-a="go:set"><span class="i">⚙️</span><b>تنظیمات و پشتیبان‌گیری</b></button><button class="cd" data-a="go:rpl:all"><span class="i">🗂</span><b>همه‌ی کارنامه‌ها</b><small>${fd(S.rp.length)} کارنامه</small></button></div>
  <button class="cd big acg" style="margin-top:10px" data-a="go:acc"><span class="i">💰</span><span><b style="font-size:18px">حساب</b><small>${acHome()}</small></span></button>
     <p class="m" style="text-align:center;margin-top:22px">${E(S.info.brand)} — ${E(S.info.teacher)}<br><span style="font-size:12px;opacity:.75">نسخه ${APPV}</span></p>`}
-const mny=v=>{const r=String(nd(String(v==null?'':v))).replace(/\D/g,'');return r?fd(r.replace(/\B(?=(\d{3})+(?!\d))/g,'٬')):''},APPV='۴۲';const SL1='آموزش و پرورش ایران فردا',SL2='یک سال ، یک مسیر و یک پشتیبان';
+const mny=v=>{const r=String(nd(String(v==null?'':v))).replace(/\D/g,'');return r?fd(r.replace(/\B(?=(\d{3})+(?!\d))/g,'٬')):''},APPV='۴۶';const SL1='آموزش و پرورش ایران فردا',SL2='یک سال ، یک مسیر و یک پشتیبان';
 const nowM=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 /* ----- برنامه کلاس‌ها ----- */
 const DC=['#e11d48','#2563eb','#16a34a','#7c3aed','#f97316','#0d9488','#db2777'],SH=['ش','ی','د','س','چ','پ','ج'],WDS=['شنبه','۱شنبه','۲شنبه','۳شنبه','۴شنبه','۵شنبه','جمعه'],dcs=j=>'--dc:'+DC[j],dnum=k=>+String(k).split('/')[2],dshort=k=>{const z=String(k).split('/').map(Number);return fd(z[2])+' '+MON[z[1]-1]};
@@ -528,10 +531,13 @@ function wsHtml(r){const w=r.ws;if(!w||(!(w.q||[]).length&&!(w.imgs||[]).length)
  return h}
 
 /* ----- دوره پشتیبان ----- */
-function vCourse(){const c=VP.c,tb=(VP.tab=='rp'&&VP.c=='p7')?'pl':(VP.tab||'pl'),L=S.st.filter(s=>inC(s,c));let h=top(CRS[c].n,fd(L.length)+' دانش‌آموز')+`<div class="tabs"><button class="${tb=='pl'?'on':''}" data-a="ctab:pl">📚 برنامه مطالعاتی</button><button class="${tb=='stu'?'on':''}" data-a="ctab:stu">🧑‍🎓 دانش‌آموزان</button>${c!='p7'?`<button class="${tb=='rp'?'on':''}" data-a="ctab:rp">📝 کارنامه</button>`:''}<button class="${tb=='gr'?'on':''}" data-a="ctab:gr">📊 گزارش عمومی</button>${c=='p7'?`<button class="${tb=='ev'?'on':''}" data-a="ctab:ev">🎯 ارزیابی</button>`:''}</div>`;
- if(tb=='pl')h+=gpTab(c);
+function vCourse(){const c=VP.c,p7=c=='p7',sec=p7?(VP.sec||'jam'):'',tb=p7?(sec=='jam'?((VP.tab=='rp'||!VP.tab)?'pl':VP.tab):'ev'):(VP.tab||'pl'),L=S.st.filter(s=>inC(s,c));let h=top(CRS[c].n,fd(L.length)+' دانش‌آموز');
+ if(p7){const MS={jam:'آزمون جامع',pro:'آزمون پیشرفت تحصیلی ریاضی',mok:'دوره مکمل'};h+=`<div class="tabs" style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;overflow:visible;font-weight:800">${Object.keys(MS).map(x=>`<button class="${sec==x?'on':''}" data-a="csec:${x}" style="white-space:normal;line-height:1.6;padding:10px 4px;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0"><span style="font-size:20px">${EVK[x].i}</span><span>${MS[x]}</span></button>`).join('')}</div>`}
+ if(!p7||sec=='jam')h+=`<div class="tabs"><button class="${tb=='pl'?'on':''}" data-a="ctab:pl">📚 برنامه مطالعاتی</button><button class="${tb=='stu'?'on':''}" data-a="ctab:stu">🧑‍🎓 دانش‌آموزان</button>${!p7?`<button class="${tb=='rp'?'on':''}" data-a="ctab:rp">📝 کارنامه</button>`:''}<button class="${tb=='gr'?'on':''}" data-a="ctab:gr">📊 گزارش عمومی</button>${p7?`<button class="${tb=='ev'?'on':''}" data-a="ctab:ev">🎯 ارزیابی</button>`:''}</div>`;
+ if(p7&&sec!='jam')h+=evTab(c,L,sec);
+ else if(tb=='pl')h+=gpTab(c);
  else if(tb=='gr')h+=grBody(c);
- else if(tb=='ev'&&c=='p7')h+=evTab(c,L);
+ else if(tb=='ev'&&p7)h+=evTab(c,L,'jam');
  else if(tb=='stu'){h+=L.length?'<div class="k">'+L.map(s=>{const p=S.pl.filter(x=>x.sid==s.id).sort((a,b)=>b.ts-a.ts)[0],pr=p?plProg(p):null;return`<div class="ln"><div class="x"><b>${E(s.n)}</b>${gpLine(s)}</div><button class="bt s g" data-a="stEdit:${s.id}">✏️</button></div>`}).join('')+'</div>':'<div class="emp">دانش‌آموزی در این دوره ثبت نشده است.</div>';h+=`<button class="fab" data-a="stNew:${c}">➕ دانش‌آموز</button>`}
  else if(tb=='pl'){const P=S.pl.filter(p=>stOf(p.sid)&&inC(stOf(p.sid),c)).sort((a,b)=>b.ts-a.ts);h+=P.length?P.map(p=>`<div class="k"><div class="row"><div><b>${E(p.title||'برنامه مطالعاتی')}</b><div class="m">${E(stN(p.sid))} • از ${dsh(p.from)}</div></div><b class="n" style="color:var(--a)">${fd(plProg(p))}٪</b></div><div class="pg"><i style="width:${plProg(p)}%"></i></div><button class="bt s" data-a="plView:${p.id}">📋 باز کردن و تیک زدن</button><button class="bt s g" data-a="plImg:${p.id}">🖼 عکس برنامه</button><button class="bt s g" data-a="rep:${p.id}:w">📊 گزارش</button><button class="bt s g" data-a="plEdit:${p.id}">✏️</button></div>`).join(''):'<div class="emp">هنوز برنامه‌ای نساخته‌اید. روی «برنامه جدید» بزنید.</div>';h+=`<button class="fab" data-a="plNew:">➕ برنامه جدید</button>`}
  else{const R=rpList(c);h+=R.length?R.map(r=>{const l=LV(r.sc);return`<div class="k"><div class="row"><span class="sc n" style="background:${l.b};color:${l.c}">${fd(r.sc)}</span><div><b>${E(stN(r.sid))}</b><div class="m">${dsh(r.date)}${r.title?' • '+E(r.title):''}</div><span class="bdg" style="background:${l.b};color:${l.c}">${l.t}</span> ${r.sent?'<span class="m">✓ ارسال‌شده</span>':''}</div></div><button class="bt s" data-a="rpSend:${r.id}">🖼 عکس و ارسال</button><button class="bt s g" data-a="rpEdit:${r.id}">✏️</button><button class="bt s r" data-a="rpDel:${r.id}">🗑</button></div>`}).join(''):'<div class="emp">کارنامه‌ای برای این دوره ساخته نشده است.</div>';h+=`<button class="fab" data-a="newrp:${c}:${tdy()}:">➕ کارنامه جدید</button>`}
@@ -610,15 +616,20 @@ function gpPlanCap(g){const w=planWk(g).replace(/&amp;/g,'&').replace(/^برنا
 async function gpPlanImg(id){const g=S.gp.find(x=>x.id==id);if(!g)return;const rg=()=>htmlImg(gpPlanHtml(g),1254,kk(),true);showImg(await mk(rg),'plan-'+g.c+'.jpg',gpPlanCap(g),null,null,rg)}
 /* ----- تنظیمات ----- */
 function vSet(){const i=S.info;return top('تنظیمات')+`<div class="k"><h3>مشخصات (روی کارنامه‌ها چاپ می‌شود)</h3><label class="f">نام استاد</label><input data-f="info.teacher" value="${E(i.teacher)}"><label class="f">نام مجموعه</label><input data-f="info.brand" value="${E(i.brand)}"><label class="f">شماره تماس (اختیاری)</label><input data-f="info.phone" value="${E(i.phone)}"></div>
- <div class="k"><h3>پشتیبان‌گیری</h3><p class="m">اطلاعات فقط روی همین گوشی ذخیره می‌شود. مرتب پشتیبان بگیرید و در ایتا برای خودتان بفرستید.</p><button class="bt" data-a="bkOut">💾 ساخت فایل پشتیبان</button><label class="bt g" style="text-align:center">📂 بازیابی از فایل پشتیبان<input type="file" id="bkIn" accept=".json,.txt,application/json,text/plain" style="display:none"></label></div>
+ <div class="k"><h3>پشتیبان‌گیری</h3><p class="m">اطلاعات فقط روی همین گوشی ذخیره می‌شود. مرتب پشتیبان بگیرید و در ایتا برای خودتان بفرستید.</p><div class="sec" style="font-size:14px">🗓 پشتیبان خودکار روزانه</div><p class="m">هر روز به‌طور خودکار از اطلاعات یک نسخه داخل همین مرورگر نگه‌داری می‌شود (آخرین ۱۴ روز). برای اطمینان بیشتر، فایل پشتیبان را هم گاهی در ایتا برای خودتان بفرستید.</p><div id="bkList" class="m">…</div><button class="bt" data-a="bkOut">💾 ساخت فایل پشتیبان</button><label class="bt g" style="text-align:center">📂 بازیابی از فایل پشتیبان<input type="file" id="bkIn" accept=".json,.txt,application/json,text/plain" style="display:none"></label></div>
  <div class="k"><h3>درباره</h3><p class="m">آکادمی ایران — آموزش و پرورش ایران فردا<br>یک سال ، یک مسیر و یک پشتیبان<br>نسخه ${APPV} • نرم‌افزار مستقل و آفلاین</p></div>`}
 /* ===== عملیات ===== */
 const clone=o=>JSON.parse(JSON.stringify(o));
 function setPath(o,p,v){const a=p.split('.');for(let i=0;i<a.length-1;i++){o=o[a[i]];if(o==null)return}o[a[a.length-1]]=v}
+/* ----- ذخیره‌ی خودکار: پیش‌نویس فرم‌ها + ذخیره‌ی فوری دفتر ارزیابی ----- */
+const DK=KEY+'.draft',DFORMS=['stEdit','rpEdit','plEdit','gpEdit','slEdit','acEdit','evEdit'];let dfT=0,agT=0;
+const dfSave=()=>{try{if(D&&DFORMS.includes(V))localStorage.setItem(DK,JSON.stringify({V,VP,D,t:Date.now()}))}catch(e){}},dfClear=()=>{try{localStorage.removeItem(DK)}catch(e){}};
+const autoSv=e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.f||!D)return;if(D._grid&&V=='evGrid'){clearTimeout(agT);agT=setTimeout(()=>{if(V=='evGrid'&&D&&D._grid)gSave(true)},350);return}dfSave()};
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||!t.dataset.f)return;let v=t.value;const f=t.dataset.f;
  if(f.startsWith('info.')){setPath(S,f,v);save();return}if(!D)return;
  if(f=='sc'){D.sc=+v;lvUpd();return}if(f=='scp'){D.sc=(+v)/5;lvUpd();return}if(f=='qv'||f=='av'){D[f]=+v;const q=$('#'+f+'t');if(q)q.textContent=fd(v)+' از ۲۰';return}if(/\.(v|m|ok|bad|bl)$/.test(f)||f=='date'||f=='from'||f=='phone'||f=='nid')v=nd(v);if(f=='fee'||f=='got'){const c0=t.selectionStart,nb=String(t.value).slice(0,c0==null?String(t.value).length:c0).replace(/[^0-9۰-۹]/g,'').length;v=String(nd(String(v))).replace(/\D/g,'');t.value=mny(v);const tv=t.value;let p=0,cn=0;while(p<tv.length&&cn<nb){if(/[۰-۹0-9]/.test(tv[p]))cn++;p++}try{t.setSelectionRange(p,p)}catch(e){}}if(D._grid&&/^m\.[^.]+\.(sc|qv|av)$/.test(f))v=nd(v);if(/^ws\.q\.\d+\.(mx|sc|n)$/.test(f)){v=String(nd(v)).replace(/[٫,]/g,'.');if(/\.sc$/.test(f))D.ws.q[+f.split('.')[2]].man=1}if(V=='rpEdit'&&isPv(D.ctx)&&/^rows\.\d+\.v$/.test(f)){const n=parseFloat(String(v).replace(/[٫,]/g,'.'));v=isNaN(n)?'':String(Math.max(0,Math.min(100,n))/5)}setPath(D,f,v);if(D._grid)gridUpd(f);if(f.startsWith('ws.q.')){wsUpd();wsfUpd(f)}});
 document.addEventListener('change',e=>{const t=e.target;if(t.id=='wsIn'){wsIn(t);return}if(t.id=='bkIn'){bkIn(t);return}if(t.id=='phIn'){phIn(t);return}if(t.id=='ptSel'){PTsel=t.value;render();return}if(t.id=='exSel'){const x=evExams()[+t.value];if(D&&x){D.code=x.code;D.title=x.title;D.date=x.date}render();return}if(t.id=='sidSel'){if(D){D.sid=t.value}render();return}if(t.id=='sidAdd'){if(D&&t.value&&!D.sids.includes(t.value))D.sids.push(t.value);render();return}if(!t.dataset||!t.dataset.f||!D)return;if(t.dataset.r){setPath(D,t.dataset.f,+t.value);render()}else if((t.dataset.f=='date'||t.dataset.f=='from')&&V!='set'){setPath(D,t.dataset.f,nd(t.value));if(V=='slEdit')render()}});
+document.addEventListener('input',autoSv);document.addEventListener('change',e=>{setTimeout(()=>autoSv(e),0)});
 function startRp(sid,date,slid,ctx){const st=stOf(sid),sl=S.sl.find(x=>x.id==slid);D={_new:1,slid:slid||'',desc:'',id:uid(),ctx:ctx||(st?(st.course=='grp'?'grp':st.course):'priv'),sid:sid||'',date:date||tdy(),title:'',subj:sl?sl.t:'',useWs:0,sc:15,rows:[],str:'',wk:'',hw:'',note:'',sent:0,ts:Date.now()};if(sl&&!sid&&sl.sids&&sl.sids.length)D.sid=sl.sids[0];go('rpEdit',{})}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a.split(':'),k=a[0];
  if(k=='wsOnT'){D.wsOn=a[1]=='1';return render()}
@@ -663,7 +674,8 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='evAll')return evSendAll(a[1]);
  if(k=='evSave'){D.date=nd(D.date);if(!okd(D.date))return toast('تاریخ را از تقویم انتخاب کنید.');if(D.k=='jam'){const R=D.rows.filter(r=>String(r.s).trim()).map(r=>({s:r.s.trim(),ok:+nd(r.ok)||0,bad:+nd(r.bad)||0,bl:+nd(r.bl)||0}));if(!R.some(r=>r.ok+r.bad+r.bl>0))return toast('تعداد سوال‌های حداقل یک درس را وارد کنید.');D.rows=R}
   D.ts=Date.now();delete D._new;const i=S.ev.findIndex(x=>x.id==D.id);if(i>=0)S.ev[i]=D;else S.ev.push(D);save();const e=D;D=null;if(a[1]=='1'){back();setTimeout(()=>evSend(e.id),60);return}toast('✓ ذخیره شد');return back()}
- if(k=='ctab'){VP.tab=a[1];if(a[1]=='gr')wk=0;return render()}
+ if(k=='csec'){VP.sec=a[1];if(a[1]=='jam'&&!VP.tab)VP.tab='pl';return render()}
+  if(k=='ctab'){VP.tab=a[1];if(a[1]=='gr')wk=0;return render()}
  if(k=='set'){D[a[1]]=a[1]=='d'?+a[2]:(a[2]);if(a[1]=='sid'&&V=='rpEdit'){}return render()}
  if(k=='tgs'){const i=D.sids.indexOf(a[1]);if(i>=0)D.sids.splice(i,1);else D.sids.push(a[1]);return render()}
  if(k=='dnT'){const x=S.sl.find(q=>q.id==a[1]);if(!x)return;const dk=a.slice(2).join(':');x.dn=x.dn||{};
@@ -743,11 +755,20 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
   if(k=='gdayall'){const g=S.gp.find(x=>x.id==a[1]);if(!g)return;g.done=g.done||{};const j=+a[2],st=gpStu(g),R=g.rows.filter(r=>+r.d==j),all=st.every(s=>gpDayState(g,j,s.id)==1);R.forEach(r=>{const cur=gpDoneOf(g,r.id);g.done[r.id]=all?cur.filter(q=>!st.some(s=>s.id==q)):Array.from(new Set(cur.concat(st.map(s=>s.id))))});save();return render()}
   if(k=='gpPlan')return gpPlanImg(a[1]);
   if(k=='gpTog'){D.nogp=D.nogp?0:1;return render()}
-  if(k=='bkOut')return bkOut()});
+  if(k=='bkOut')return bkOut();if(k=='bkRest')return bkRest(a.slice(1).join(':'))});
 /* ===== پشتیبان ===== */
 async function bkOut(){flush();const n='akademi-backup-'+tdy().replace(/\//g,'-')+'.json',f=new File([JSON.stringify(S)],n,{type:'application/json'});try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e&&e.name=='AbortError')return}dlFile(f)}
 function dlFile(f){const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)}
 function bkIn(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!Array.isArray(o.st)||!Array.isArray(o.sl))throw 0;if(!confirm('اطلاعات فعلی با فایل پشتیبان جایگزین شود؟'))return;S=o;S.info=Object.assign({teacher:'استاد کریم‌تبار',brand:'آکادمی ایران',phone:''},S.info||{});['st','sl','rp','pl','gp','ac','ev'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});flush();toast('✓ بازیابی شد');render()}catch(e){toast('فایل پشتیبان معتبر نیست.')}};r.readAsText(f)}
+/* ===== پشتیبان‌گیری خودکار روزانه (داخل مرورگر، IndexedDB) ===== */
+const BKN=14,bkDb=()=>new Promise((ok,no)=>{try{const q=indexedDB.open('akademi-auto-backup',1);q.onupgradeneeded=()=>q.result.createObjectStore('snap',{keyPath:'k'});q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)}catch(e){no(e)}}),
+bkReq=(db,mode,fn)=>new Promise((ok,no)=>{const t=db.transaction('snap',mode),st=t.objectStore('snap'),r=fn(st);t.oncomplete=()=>ok(r&&r.result);t.onerror=()=>no(t.error);t.onabort=()=>no(t.error)}),
+bkHas=()=>['st','rp','pl','gp','ac','ev','sl'].some(k=>Array.isArray(S[k])&&S[k].length);
+async function bkAuto(force){try{if(!bkHas())return;flush();const db=await bkDb(),k=tdy().replace(/\//g,'-'),json=JSON.stringify(S),all=await bkReq(db,'readonly',st=>st.getAll());const cur=all.find(x=>x.k==k);if(cur&&!force&&cur.json===json)return;await bkReq(db,'readwrite',st=>st.put({k,ts:Date.now(),json,n:S.st.length}));const days=all.filter(x=>/^\d+-\d+-\d+$/.test(x.k)&&x.k!=k).sort((a,b)=>b.ts-a.ts);for(const x of days.slice(BKN-1))await bkReq(db,'readwrite',st=>st.delete(x.k));db.close()}catch(e){}}
+async function bkFill(){const el=document.getElementById('bkList');if(!el)return;try{const db=await bkDb(),all=(await bkReq(db,'readonly',st=>st.getAll())).sort((a,b)=>b.ts-a.ts);db.close();if(!document.getElementById('bkList'))return;el.innerHTML=all.length?all.map(x=>`<div class="ln"><div class="x"><b>${x.k=='before-restore'?'قبل از آخرین بازیابی':fd(x.k.replace(/-/g,'/'))}</b><div class="m">${fd(new Date(x.ts).toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'}))} • ${fd(x.n||0)} دانش‌آموز • ${fd(Math.round(x.json.length/1024))} کیلوبایت</div></div><button class="bt s g" data-a="bkRest:${x.k}">↩ بازیابی</button></div>`).join(''):'<div class="m">هنوز نسخه‌ی خودکاری ساخته نشده است؛ بعد از ثبت اولین اطلاعات ساخته می‌شود.</div>'}catch(e){el.innerHTML='<div class="m">مرورگر اجازه‌ی پشتیبان خودکار نمی‌دهد (حالت خصوصی؟).</div>'}}
+async function bkRest(k){try{const db=await bkDb(),all=await bkReq(db,'readonly',st=>st.getAll()),x=all.find(y=>y.k==k);if(!x){db.close();return toast('نسخه پیدا نشد.')}if(!confirm('اطلاعات فعلی با این نسخه‌ی خودکار جایگزین شود؟ (از وضعیت فعلی هم یک نسخه نگه داشته می‌شود.)')){db.close();return}await bkReq(db,'readwrite',st=>st.put({k:'before-restore',ts:Date.now(),json:JSON.stringify(S),n:S.st.length}));db.close();const o=JSON.parse(x.json);S=o;S.info=Object.assign({teacher:'استاد کریم‌تبار',brand:'آکادمی ایران',phone:''},S.info||{});['st','sl','rp','pl','gp','ac','ev'].forEach(q=>{if(!Array.isArray(S[q]))S[q]=[]});flush();toast('✓ بازیابی شد');render()}catch(e){toast('بازیابی ناموفق بود.')}}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+setTimeout(bkAuto,1500);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')bkAuto()});setInterval(()=>bkAuto(),30*60*1000);
 /* ===== ساخت عکس ===== */
 const fontCss=()=>{const s=document.getElementById('fs');return s?s.textContent:''};
 async function htmlImg(inner,W,K,ex){await (document.fonts&&document.fonts.ready);const css='<style>'+fontCss()+'*{box-sizing:border-box;margin:0}.ipg{font-family:Yekan,Tahoma,sans-serif;direction:rtl;background:#fff;color:#0f1f3d;line-height:1.85}</style>';
@@ -940,13 +961,13 @@ function evStuList(L){return L.map(s=>{const j=evOf(s.id,'jam'),p=evOf(s.id,'pro
 /* ----- دفتر ارزیابی (ورود ردیفی اطلاعات همه‌ی دانش‌آموزان) ----- */
 const gStu=()=>S.st.filter(s=>inC(s,'p7')),evBK=e=>e.k=='jam'?evKey(e):(e.date+'|'+(e.title||'')),gKey=d=>d.k=='jam'?(d.code||(d.date+'|'+d.title)):(d.date+'|'+d.title);
 function evBatches(k,L){const ids=new Set(L.map(s=>s.id)),m={};S.ev.filter(x=>x.k==k&&ids.has(x.sid)).forEach(x=>{const b=evBK(x),o=m[b]||(m[b]={key:b,title:x.title||'',date:x.date,code:x.code||'',v:[]});o.v.push(k=='jam'?evAll(x).pct:k=='pro'?+x.sc:((+x.qv)+(+x.av))/2)});return Object.values(m).map(o=>(o.n=o.v.length,o.avg=avgN(o.v.filter(z=>z!=null)),o)).sort((a,b)=>jn(b.date)-jn(a.date))}
-function evTab(c,L){const ek=VP.ek||'jam';let h='<div class="k full" style="padding:10px 12px"><b>🎯 ارزیابی دانش‌آموزان</b><div class="m">برای هر آزمون یک «دفتر» بسازید و اطلاعات همه‌ی دانش‌آموزان را ردیف‌به‌ردیف وارد کنید؛ در پایان از هر دانش‌آموز خروجی جداگانه گرفته می‌شود.</div></div>';
+function evTab(c,L,ek){ek=ek||VP.ek||'jam';let h='<div class="k full" style="padding:10px 12px"><b>🎯 ارزیابی دانش‌آموزان</b><div class="m">برای هر آزمون یک «دفتر» بسازید و اطلاعات همه‌ی دانش‌آموزان را ردیف‌به‌ردیف وارد کنید؛ در پایان از هر دانش‌آموز خروجی جداگانه گرفته می‌شود.</div></div>';
  if(!L.length)return h+'<div class="emp">دانش‌آموزی در این دوره ثبت نشده است.</div>';
- h+='<div class="tabs" style="grid-column:1/-1">'+Object.keys(EVK).map(x=>`<button class="${ek==x?'on':''}" data-a="ektab:${x}">${EVK[x].i} ${EVK[x].t}</button>`).join('')+'</div>';
+ 
  const B=evBatches(ek,L);
  if(!B.length)h+='<div class="emp full">هنوز دفتری برای «'+EVK[ek].t+'» ساخته نشده است. روی «دفتر جدید» بزنید.</div>';
  h+=B.map((b,i)=>`<div class="k"><div class="row"><div style="flex:1"><b>${E(b.title||EVK[ek].t)}</b>${b.code?` <span class="bdg" style="background:#e4edff;color:#1f3a93">${E(b.code)}</span>`:''}<div class="m">${dsh(b.date)} • ${fd(b.n)} از ${fd(L.length)} نفر${b.avg!=null?' • میانگین '+(ek=='jam'?pctF(b.avg):f1(b.avg)):''}</div></div></div><button class="bt s" data-a="evGrid:${ek}:${i}">📒 باز کردن دفتر</button><button class="bt s r" data-a="evBDel:${ek}:${i}">🗑</button></div>`).join('');
- h+=ptCard(L)+`<details class="k full"><summary style="cursor:pointer;font-weight:700">👤 مشاهده و گزارش جامع به تفکیک دانش‌آموز</summary><div style="margin-top:10px">${evStuList(L)}</div></details>`;
+ h+=(ek=='jam'?ptCard(L):'')+`<details class="k full"><summary style="cursor:pointer;font-weight:700">👤 مشاهده و گزارش جامع به تفکیک دانش‌آموز</summary><div style="margin-top:10px">${evStuList(L)}</div></details>`;
  return h+`<button class="fab" data-a="evGrid:${ek}:n">➕ دفتر جدید</button>`}
 function evGridBuild(k,key){const L=gStu(),R=key?S.ev.filter(x=>x.k==k&&evBK(x)==key&&L.some(s=>s.id==x.sid)):[],f=R[0],d={_grid:1,k,old:key||'',title:f?(f.title||''):'',date:f?f.date:tdy(),code:'',neg:1,subs:EVS.slice(),m:{}};
  if(k=='jam'){d.code=f?(f.code||''):newEv('x','jam').code;d.neg=f?(f.neg?1:0):1;if(f&&f.rows&&f.rows.length)d.subs=f.rows.map(r=>r.s)}
@@ -964,7 +985,7 @@ function vEvGrid(){if(!D||!D._grid)D=evGridBuild(VP.k||'jam',VP.key||'');const d
  h+=(k=='jam'?'<button class="bt g s" data-a="gAddSub" style="width:auto;margin-bottom:8px">➕ افزودن درس (ستون)</button>':'')+`<div class="gw"><table class="gt"><thead>${th}</thead><tbody>${rows}</tbody></table></div>`;
  h+=`<div class="k"><b>📤 خروجی‌های جداگانه</b><div class="m" style="margin:4px 0 8px">با دکمه‌ی 🖼 هر ردیف، کارنامه‌ی همان دانش‌آموز ساخته و ارسال می‌شود. برای گرفتن همه با هم، یک فایل ZIP شامل خروجی جداگانه‌ی هر دانش‌آموز بسازید. (خروجی ردیف‌های خالی ساخته نمی‌شود.)</div><button class="bt" data-a="gAll:img">🖼 همه‌ی کارنامه‌ها (ZIP عکس‌ها)</button><button class="bt g" data-a="gAll:pdf">📄 همه‌ی کارنامه‌ها (ZIP فایل‌های PDF)</button></div><button class="fab" data-a="gSave">💾 ذخیره‌ی دفتر</button>`;
  return h}
-function gSave(){const d=D;if(!d||!d._grid)return false;d.date=nd(d.date);if(!okd(d.date)){toast('تاریخ را از تقویم انتخاب کنید.');return false}
+function gSave(q){const d=D;if(!d||!d._grid)return false;d.date=nd(d.date);if(!okd(d.date)){if(!q)toast('تاریخ را از تقویم انتخاب کنید.');return false}
  d.title=(d.title||'').trim();if(d.k=='jam')d.code=(d.code||'').trim();const nk=gKey(d);let n=0;
  gStu().forEach(s=>{const w=d.m[s.id];if(!w)return;const rec={};let filled=false;
   if(d.k=='jam'){rec.rows=d.subs.map((sub,i)=>({s:String(sub).trim(),ok:+nd(w.r[i].ok)||0,bad:+nd(w.r[i].bad)||0,bl:+nd(w.r[i].bl)||0})).filter(r=>r.s);filled=rec.rows.some(r=>r.ok+r.bad+r.bl>0);rec.neg=d.neg?1:0;rec.code=d.code}
@@ -972,7 +993,7 @@ function gSave(){const d=D;if(!d||!d._grid)return false;d.date=nd(d.date);if(!ok
   const ex=S.ev.find(x=>x.sid==s.id&&x.k==d.k&&(evBK(x)==d.old||evBK(x)==nk));
   if(!filled){if(ex&&evBK(ex)==d.old)S.ev=S.ev.filter(x=>x.id!=ex.id);return}
   const e=ex||newEv(s.id,d.k);delete e._new;Object.assign(e,rec,{date:d.date,title:d.title,ts:Date.now()});if(!ex)S.ev.push(e);n++});
- d.old=nk;VP.key=nk;save();toast('✓ دفتر ذخیره شد ('+fd(n)+' دانش‌آموز)');return true}
+ d.old=nk;VP.key=nk;save();if(!q)toast('✓ دفتر ذخیره شد ('+fd(n)+' دانش‌آموز)');return true}
 const gRec=sid=>S.ev.find(x=>x.sid==sid&&x.k==D.k&&evBK(x)==D.old);
 async function gAll(kind){if(window.gBusy)return;if(!gSave())return;const d=D,R=gStu().map(s=>gRec(s.id)).filter(Boolean);if(!R.length)return toast('هنوز اطلاعاتی وارد نشده است.');window.gBusy=1;const fn=d.k=='jam'?jamHtml:d.k=='pro'?proHtml:mokHtml,files=[];
  try{for(let i=0;i<R.length;i++){toast('در حال ساخت '+fd(i+1)+' از '+fd(R.length)+'…');const e=R[i],b=await htmlImg(fn(e),760);let data,ext='jpg';if(kind=='pdf'){data=new Uint8Array(await new Blob([await blobToPdf(b)]).arrayBuffer());ext='pdf'}else data=new Uint8Array(await b.arrayBuffer());files.push({name:String(i+1).padStart(2,'0')+'-'+stN(e.sid).replace(/\s+/g,'-')+'.'+ext,data})}
@@ -1097,7 +1118,7 @@ function showImg(blob,name,cap,onSent,st,regen){if(!blob)return;let f,url,cur,ca
  if(cap)$('#ocp').onclick=async()=>{try{await navigator.clipboard.writeText(cap);m.textContent='کپشن کپی شد؛ در ایتا روی کادر کپشن Paste بزنید.'}catch(e){m.textContent='کپی خودکار انجام نشد.'}};
  const g=$('#ogo');if(g)g.onclick=async()=>{try{if(cap)try{await navigator.clipboard.writeText(cap)}catch(e){}await navigator.share({files:[f]});if(onSent)onSent();m.textContent='✓ ارسال شد'}catch(e){if(e&&e.name=='AbortError')return;m.textContent='ارسال مستقیم انجام نشد؛ «ذخیره عکس» را بزنید.'}}}
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
-history.replaceState({},'');render();
+history.replaceState({},'');try{const dr=JSON.parse(localStorage.getItem(DK)||'null');if(dr&&dr.D&&DFORMS.includes(dr.V)){V=dr.V;VP=dr.VP||{};D=dr.D;setTimeout(()=>toast('پیش‌نویس ذخیره‌نشده‌ی شما بازیابی شد'),400)}}catch(e){}render();
 window.__ak={portalBuild,ptLast:()=>PTlast,newEv,evExams,gpPlanCap,gpRepHtml,gpPlanHtml,gpRpBlock,gpForRp,grHtml,grData,grBody,planImgHtml,repHtml,imgPage,S:()=>S,go,render,rpHtml,plHtml,htmlImg,tdy,dadd,wdi,sessOn};
 })();
 </script>
