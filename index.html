@@ -36,6 +36,7 @@ html,body{margin:0}body{background-color:var(--bg);background-image:var(--bgi);b
 #app{max-width:1700px;margin:0 auto;padding:0 14px 90px}
 .top{position:sticky;top:0;z-index:20;margin:0 -14px 18px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;background:linear-gradient(135deg,#14235c,#1f3a93 60%,#2d57c9);color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 5px 0 #fbd23a,0 9px 16px #14235c33}
 .top{cursor:pointer}.top b{font-size:18px;flex:1}.top .bb{flex:0 0 auto}.top .tt{flex:1;min-width:0;font-size:17px;font-weight:800;background:#ffffff1f;border-radius:14px;padding:5px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-inline-start:6px}.top .tt small{display:inline;font-size:12.5px;font-weight:400;opacity:.85}.top small{display:block;font-size:12px;opacity:.9;font-weight:400}
+.top button.ubt{position:relative;background:#ff7a2f;color:#fff;box-shadow:0 2px 0 #b84a0f;flex:0 0 40px;display:flex;align-items:center;justify-content:center}.top button.ubt i{position:absolute;top:-6px;left:-6px;min-width:19px;height:19px;border-radius:10px;background:#fbd23a;color:#14235c;font:800 11px/19px Yekan,Tahoma,sans-serif;font-style:normal;text-align:center;padding:0 3px}.top button.ubt i:empty{display:none}.top button.ubt.off{background:#ffffff26;box-shadow:none;opacity:.55}.top button.ubt:active{transform:scale(.92)}
 .top button{background:#ffffff26;color:#fff;border:0;border-radius:12px;width:40px;height:40px;font-size:20px;padding:0;width:40px}
 .logo{width:42px;height:42px;flex:0 0 42px}
 .k{background:var(--c);border:1px solid var(--l);border-radius:16px;padding:14px;margin-bottom:12px}
@@ -219,7 +220,28 @@ SUBJ=['ریاضی','علوم تجربی','ادبیات فارسی','عربی','�
 let S;try{S=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){S=null}
 if(!S||typeof S!='object')S={};
 S.info=Object.assign({teacher:'استاد کریم‌تبار',brand:'آکادمی ایران',phone:''},S.info||{});['st','sl','rp','pl','gp','ac','ev'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
-let svT=0;const save=()=>{clearTimeout(svT);svT=setTimeout(flush,150)},flush=()=>{clearTimeout(svT);try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('⚠ ذخیره‌سازی ناموفق بود؛ از تنظیمات پشتیبان بگیرید.')}};
+/* ===== پایه و درس کلاس‌ها: یک‌دست‌سازی ثبت‌های قبلی ===== */
+const CGR=['اول','دوم','سوم','چهارم','پنجم','ششم','هفتم','هشتم','نهم','دهم','یازدهم','دوازدهم'],CSB=['ریاضی','فارسی','علوم','مطالعات','عربی','انگلیسی'];
+const subjOf=t=>{t=String(t||'');return /ریاضی|هندسه/.test(t)?'ریاضی':/فارسی|ادبیات|نگارش/.test(t)?'فارسی':/علوم/.test(t)?'علوم':/مطالعات|اجتماعی/.test(t)?'مطالعات':/عربی/.test(t)?'عربی':/انگلیس|زبان/.test(t)?'انگلیسی':''},gradeOf=t=>String(t||'').split(/[\s\u200c—\-–،,:]+/).find(w=>CGR.includes(w))||'';
+(function(){let ch=0;S.sl.forEach(x=>{if(x.subj&&x.grade)return;const st=(x.sids||[]).map(i=>S.st.find(q=>q.id==i)).find(q=>q&&CGR.includes(q.grade)),sj=x.subj||subjOf(x.t),gr=x.grade||gradeOf(x.t)||(st?st.grade:'');if(sj&&!x.subj){x.subj=sj;ch=1}if(gr&&!x.grade){x.grade=gr;ch=1}if(x.subj){const nt=x.subj+(x.grade?' '+x.grade:'');if(x.t!==nt){x.t=nt;ch=1}S.ac.forEach(e=>{if(e.sl==x.id&&e.t!==nt){e.t=nt;ch=1}})}});if(ch)try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}})();
+/* ===== برگشت به مرحله‌ی قبل (حداکثر ۱۰ مرحله) ===== */
+const UMAX=10;let UH=[],UC=JSON.stringify(S),tyT=0,lastTy=false;
+document.addEventListener('input',()=>{tyT=Date.now()},true);
+const normS=()=>{if(!S||typeof S!='object')S={};S.info=Object.assign({teacher:'استاد کریم‌تبار',brand:'آکادمی ایران',phone:''},S.info||{});['st','sl','rp','pl','gp','ac','ev'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]})};
+function uBtnUpd(){document.querySelectorAll('.ubt').forEach(b=>{b.classList.toggle('off',!UH.length);const i=b.querySelector('i');if(i)i.textContent=UH.length?fd(UH.length):''})}
+const undoBtn=()=>`<button class="ubt${UH.length?'':' off'}" data-a="undo" aria-label="برگشت به مرحله‌ی قبل" title="برگشت به مرحله‌ی قبل"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5 3.5 9.5l5-5"/><path d="M3.5 9.5h10a6 6 0 0 1 0 12H9"/></svg><i>${UH.length?fd(UH.length):''}</i></button>`;
+function undo(){flush();if(!UH.length)return toast('مرحله‌ای برای برگشت وجود ندارد');
+ const inForm=D&&(DFORMS.includes(V)||V=='evGrid');
+ if(inForm&&!confirm('فرم باز بسته می‌شود (تغییرات ذخیره‌نشده‌ی آن از بین می‌رود) و آخرین تغییر ثبت‌شده برگردانده می‌شود. ادامه؟'))return;
+ let o;try{o=JSON.parse(UH[UH.length-1])}catch(e){UH.pop();uBtnUpd();return toast('برگشت ممکن نشد')}
+ UH.pop();S=o;normS();UC=JSON.stringify(S);lastTy=false;clearTimeout(svT);clearTimeout(agT);
+ try{localStorage.setItem(KEY,UC)}catch(e){toast('⚠ ذخیره‌سازی ناموفق بود؛ از تنظیمات پشتیبان بگیرید.')}
+ if(inForm&&ST.length)back();else{if(inForm){D=null;dfClear()}try{render()}catch(e){V='home';VP={};ST.length=0;D=null;render()}}
+ toast('↶ برگشت انجام شد'+(UH.length?' • '+fd(UH.length)+' مرحله‌ی دیگر':''))}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&!e.shiftKey&&(e.key=='z'||e.key=='Z')){const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;e.preventDefault();undo()}});
+let svT=0;const save=()=>{clearTimeout(svT);svT=setTimeout(flush,150)},flush=()=>{clearTimeout(svT);let j;try{j=JSON.stringify(S)}catch(e){return}
+ if(j!==UC){const ty=Date.now()-tyT<1200;if(!(ty&&lastTy&&UH.length))UH.push(UC);lastTy=ty;while(UH.length>UMAX)UH.shift();UC=j;uBtnUpd()}
+ try{localStorage.setItem(KEY,j)}catch(e){toast('⚠ ذخیره‌سازی ناموفق بود؛ از تنظیمات پشتیبان بگیرید.')}};
 addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.visibilityState=='hidden')flush()});
 function toast(t){if(t==='✓ ذخیره شد'){clearTimeout(dfT);try{localStorage.removeItem(KEY+'.draft')}catch(e){}}const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
 const stN=id=>(S.st.find(x=>x.id==id)||{n:'(حذف‌شده)'}).n,stOf=id=>S.st.find(x=>x.id==id);
@@ -235,7 +257,7 @@ document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest
 addEventListener('popstate',()=>{if(WSF){wsfClose();return}dfClear();const x=ST.pop();if(x){V=x[0];VP=x[1];open=x[2];D=null}else{V='home';VP={}}render()});
 /* ===== نمایش ===== */
 const LOGO='<svg class="logo" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff"/><circle cx="32" cy="32" r="27" fill="#1d4ed8"/><path d="M14 24c6-3 12-3 18 1 6-4 12-4 18-1v22c-6-3-12-3-18 1-6-4-12-4-18-1z" fill="#fff"/><path d="M32 25v22" stroke="#1d4ed8" stroke-width="2"/><path d="M32 8l2.6 5.3 5.8.8-4.2 4.1 1 5.8L32 21.3l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z" fill="#fde047"/></svg>';
-function top(t,sub,right){return V=='home'?`<div class="top">${LOGO}<b>${t}${sub?'<small>'+sub+'</small>':''}</b>${right||''}</div>`:`<div class="top"><button class="bkh" data-a="back" aria-label="بازگشت">↩</button><b class="bb">آکادمی ایران<small>آموزش و پرورش ایران فردا</small></b><span class="tt">${t}${sub?'<small> • '+sub+'</small>':''}</span>${right||''}</div>`}
+function top(t,sub,right){return V=='home'?`<div class="top">${LOGO}<b>${t}${sub?'<small>'+sub+'</small>':''}</b>${right||''}${undoBtn()}</div>`:`<div class="top"><button class="bkh" data-a="back" aria-label="بازگشت">↩</button><b class="bb">آکادمی ایران<small>آموزش و پرورش ایران فردا</small></b><span class="tt">${t}${sub?'<small> • '+sub+'</small>':''}</span>${right||''}${undoBtn()}</div>`}
 const nearBy=(e,k)=>e;
 function dayOfSl(x,key){const h=(x.dh||[]).slice().sort((a,b)=>jn(a.to)-jn(b.to)),n=jn(key);for(const e of h)if(n<jn(e.to))return e.d;return x.d}
 function sessOn(key){const j=wdi(key);return S.sl.filter(x=>x.rep=='o'?x.date==key:(dayOfSl(x,key)==j&&key>=(x.from||'0/0/0')&&!(x.skip||[]).includes(key))&&jn(key)>=jn(x.from||'1/1/1')).sort((a,b)=>tm(a.s)-tm(b.s))}
@@ -250,7 +272,7 @@ function vHome(){const T=tdy(),ts=sessOn(T),nx=ts.find(x=>tm(x.e)>nowM());
  <div class="g2" style="margin-top:10px"><button class="cd" data-a="go:set"><span class="i">⚙️</span><b>تنظیمات و پشتیبان‌گیری</b></button><button class="cd" data-a="go:rpl:all"><span class="i">🗂</span><b>همه‌ی کارنامه‌ها</b><small>${fd(S.rp.length)} کارنامه</small></button></div>
  <button class="cd big acg" style="margin-top:10px" data-a="go:acc"><span class="i">💰</span><span><b style="font-size:18px">حساب</b><small>${acHome()}</small></span></button>
     <p class="m" style="text-align:center;margin-top:22px">${E(S.info.brand)} — ${E(S.info.teacher)}<br><span style="font-size:12px;opacity:.75">نسخه ${APPV}</span></p>`}
-const mny=v=>{const r=String(nd(String(v==null?'':v))).replace(/\D/g,'');return r?fd(r.replace(/\B(?=(\d{3})+(?!\d))/g,'٬')):''},APPV='۵۹';const SL1='آموزش و پرورش ایران فردا',SL2='یک سال ، یک مسیر و یک پشتیبان';
+const mny=v=>{const r=String(nd(String(v==null?'':v))).replace(/\D/g,'');return r?fd(r.replace(/\B(?=(\d{3})+(?!\d))/g,'٬')):''},APPV='۶۲';const SL1='آموزش و پرورش ایران فردا',SL2='یک سال ، یک مسیر و یک پشتیبان';
 const nowM=()=>{const d=new Date();return d.getHours()*60+d.getMinutes()};
 /* ----- برنامه کلاس‌ها ----- */
 const DC=['#e11d48','#2563eb','#16a34a','#7c3aed','#f97316','#0d9488','#db2777'],SH=['ش','ی','د','س','چ','پ','ج'],WDS=['شنبه','۱شنبه','۲شنبه','۳شنبه','۴شنبه','۵شنبه','جمعه'],dcs=j=>'--dc:'+DC[j],dnum=k=>+String(k).split('/')[2],dshort=k=>{const z=String(k).split('/').map(Number);return fd(z[2])+' '+MON[z[1]-1]};
@@ -287,12 +309,14 @@ function vMonth(T){const z=T.split('/').map(Number),ix=z[0]*12+z[1]-1+mo,y=Math.
  for(let i=0;i<off;i++)g+='<div class="mc e"></div>';
  for(let d=1;d<=n;d++){const k=y+'/'+m+'/'+d,j=(off+d-1)%7,c=sessOn(k).length;tot+=c;g+=`<button class="mc${c?' has':''}${k==T?' tdy':''}" style="${dcs(j)}" data-a="pickd:${k}"><b>${fd(d)}</b><span class="dt">${c?'<u></u>'.repeat(Math.min(c,4)):''}</span></button>`}
  return top('برنامه کلاس‌ها','نمای ماهانه')+hdrRow(MON[m-1],fd(y),T)+`<div class="nv sch"><button data-a="mo:-1">▶ ماه قبل</button><button data-a="mo:0" class="mid">این ماه</button><button data-a="mo:1">ماه بعد ◀</button></div><div class="k"><div class="mgr">${g}</div><p class="m" style="margin:10px 2px 0">هر نقطه یک کلاس است؛ روی هر روز بزنید تا برنامه‌ی همان هفته باز شود. • جمع این ماه: ${fd(tot)} کلاس</p></div>`}
+const firstOcc=(f,d)=>{for(let i=0;i<7;i++){const k=dadd(f,i);if(wdi(k)==+d)return k}return f};
 function vSlEdit(){const d=D,ph=S.st;return top(d._new?'کلاس جدید':'ویرایش کلاس')+`<div class="k"><div class="row"><div><label class="f">ساعت شروع</label><input type="time" data-f="s" value="${E(d.s)}"></div><div><label class="f">ساعت پایان</label><input type="time" data-f="e" value="${E(d.e)}"></div></div>
- <label class="f">عنوان یا درس</label><input data-f="t" value="${E(d.t)}" placeholder="مثلاً ریاضی هفتم — علی رضایی">
+ 
  <label class="f">دانش‌آموزان این کلاس</label>${ph.length?`<div>${d.sids.filter(stOf).map(i=>`<button class="chip on" data-a="tgs:${i}">${E(stN(i))} ✕</button>`).join('')}</div><select id="sidAdd"><option value="">➕ انتخاب دانش‌آموز از لیست…</option>${ph.filter(q=>!d.sids.includes(q.id)).map(q=>`<option value="${q.id}">${E(q.n)}${csN(q)?' — '+csN(q):''}</option>`).join('')}</select>`:'<p class="m">ابتدا از بخش «دانش‌آموزان» دانش‌آموزی اضافه کنید (انتخاب دانش‌آموز اختیاری است).</p>'}
- <label class="f">نوع کلاس</label><div class="row"><button class="chip ${d.kind=='priv'?'on':''}" data-a="set:kind:priv">🧑‍🏫 خصوصی</button><button class="chip ${d.kind=='grp'?'on':''}" data-a="set:kind:grp">👥 گروهی</button></div>
+ <div class="row"><div><label class="f">پایه *</label><select data-f="grade"><option value="">انتخاب پایه…</option>${(CGR.includes(d.grade)||!d.grade?CGR:[d.grade].concat(CGR)).map(g=>`<option value="${E(g)}"${d.grade==g?' selected':''}>${E(g)}</option>`).join('')}</select></div><div><label class="f">درس *</label><select data-f="subj"><option value="">انتخاب درس…</option>${(CSB.includes(d.subj)||!d.subj?CSB:[d.subj].concat(CSB)).map(g=>`<option value="${E(g)}"${d.subj==g?' selected':''}>${E(g)}</option>`).join('')}</select></div></div>
+<label class="f">نوع کلاس</label><div class="row"><button class="chip ${d.kind=='priv'?'on':''}" data-a="set:kind:priv">🧑‍🏫 خصوصی</button><button class="chip ${d.kind=='grp'?'on':''}" data-a="set:kind:grp">👥 گروهی</button></div>
  <label class="f">تکرار</label><div class="row"><button class="chip ${d.rep=='w'?'on':''}" data-a="set:rep:w">🔁 هر هفته</button><button class="chip ${d.rep=='o'?'on':''}" data-a="set:rep:o">1️⃣ فقط یک‌بار</button></div>
- <label class="f">${d.rep=='o'?'روز (تاریخ دقیق)':'روز هفته'}</label>${d.rep=='o'?`<input class="dpi" readonly inputmode="none" data-a="dpo:date" data-f="date" value="${E(fd(d.date||''))}" placeholder="📅 انتخاب از تقویم"><button class="bt g s" data-a="dpo:date">📅 انتخاب از تقویم</button><p class="m">${okd(nd(d.date))?dlb(nd(d.date)):''}</p>`:`<div>${WD.map((w,i)=>`<button class="chip ${d.d==i?'on':''}" data-a="set:d:${i}">${w}</button>`).join('')}</div>${d._new?'':'<p class="m">با تغییر روز، هفته‌های گذشته بدون تغییر می‌مانند و روز جدید فقط از هفته‌ی بعد (یا هفته‌ای که در برنامه باز است، اگر بعد از این هفته باشد) اعمال می‌شود.</p>'}`}
+ <label class="f">${d.rep=='o'?'روز (تاریخ دقیق)':'📅 تاریخ آغاز کلاس (اجباری)'}</label>${d.rep=='o'?`<input class="dpi" readonly inputmode="none" data-a="dpo:date" data-f="date" value="${E(fd(d.date||''))}" placeholder="📅 انتخاب از تقویم"><button class="bt g s" data-a="dpo:date">📅 انتخاب از تقویم</button><p class="m">${okd(nd(d.date))?dlb(nd(d.date)):''}</p>`:`<input class="dpi" readonly inputmode="none" data-a="dpo:from" data-f="from" value="${E(okd(nd(d.from||''))?fd(nd(d.from)):'')}" placeholder="📅 انتخاب تاریخ آغاز از تقویم"><button class="bt g s" data-a="dpo:from">📅 انتخاب از تقویم</button><p class="m">${okd(nd(d.from||''))?'اولین جلسه: '+dlb(firstOcc(nd(d.from),d.d))+' و بعد از آن هر هفته':'تاریخ آغاز را انتخاب کنید.'}</p><label class="f">روز هفته</label><div>${WD.map((w,i)=>`<button class="chip ${d.d==i?'on':''}" data-a="set:d:${i}">${w}</button>`).join('')}</div>${d._new?'':'<p class="m">با تغییر روز، هفته‌های گذشته بدون تغییر می‌مانند و روز جدید فقط از هفته‌ی بعد (یا هفته‌ای که در برنامه باز است، اگر بعد از این هفته باشد) اعمال می‌شود.</p>'}`}
  
  <label class="f">مکان یا لینک (اختیاری)</label><input data-f="place" value="${E(d.place)}" placeholder="مثلاً منزل دانش‌آموز / آنلاین">
  <label class="f">هزینه‌ی هر جلسه (تومان) *</label><input inputmode="numeric" data-f="fee" value="${E(mny(d.fee))}" placeholder="مثلاً ۲۰۰٬۰۰۰"><p class="m">وقتی روی کارت جلسه «پایان کلاس» را بزنید، این مبلغ در بخش «حساب» ثبت می‌شود.</p></div>
@@ -647,14 +671,14 @@ const autoSv=e=>{const t=e.target;if(!t||!t.dataset||!t.dataset.f||!D)return;if(
 document.addEventListener('input',e=>{const t=e.target;if(!t.dataset||!t.dataset.f)return;let v=t.value;const f=t.dataset.f;
  if(f.startsWith('info.')){setPath(S,f,v);save();return}if(!D)return;
  if(f=='sc'){D.sc=+v;lvUpd();return}if(f=='scp'){D.sc=(+v)/5;lvUpd();return}if(f=='qv'||f=='av'){D[f]=+v;const q=$('#'+f+'t');if(q)q.textContent=fd(v)+' از ۲۰';return}if(/\.(v|m|ok|bad|bl)$/.test(f)||f=='date'||f=='from'||f=='phone'||f=='nid')v=nd(v);if(f=='fee'||f=='got'){const c0=t.selectionStart,nb=String(t.value).slice(0,c0==null?String(t.value).length:c0).replace(/[^0-9۰-۹]/g,'').length;v=String(nd(String(v))).replace(/\D/g,'');t.value=mny(v);const tv=t.value;let p=0,cn=0;while(p<tv.length&&cn<nb){if(/[۰-۹0-9]/.test(tv[p]))cn++;p++}try{t.setSelectionRange(p,p)}catch(e){}}if(D._grid&&/^m\.[^.]+\.(sc|qv|av)$/.test(f))v=nd(v);if(/^ws\.q\.\d+\.(mx|sc|n)$/.test(f)){v=String(nd(v)).replace(/[٫,]/g,'.');if(/\.sc$/.test(f))D.ws.q[+f.split('.')[2]].man=1}if(V=='rpEdit'&&isPv(D.ctx)&&/^rows\.\d+\.v$/.test(f)){const n=parseFloat(String(v).replace(/[٫,]/g,'.'));v=isNaN(n)?'':String(Math.max(0,Math.min(100,n))/5)}setPath(D,f,v);if((f=='str'||f=='wk')&&V=='rpEdit')lvUpd();if(D._grid)gridUpd(f);if(f.startsWith('ws.q.')){wsUpd();wsfUpd(f)}});
-document.addEventListener('change',e=>{const t=e.target;if(t.id=='wsIn'){wsIn(t);return}if(t.id=='pqIn'){pqIn(t);return}if(t.id=='bkIn'){bkIn(t);return}if(t.id=='phIn'){phIn(t);return}if(t.id=='ptSel'){PTsel=t.value;render();return}if(t.id=='exSel'){const x=evExams()[+t.value];if(D&&x){D.code=x.code;D.title=x.title;D.date=x.date}render();return}if(t.id=='sidSel'){if(D){D.sid=t.value}render();return}if(t.id=='subjSel'){if(D){if(t.value=='__new'){const n=(prompt('نام درس را بنویسید:')||'').trim();if(n)D.subj=n}else D.subj=t.value;dfSave()}render();return}if(t.id=='sidAdd'){if(D&&t.value&&!D.sids.includes(t.value))D.sids.push(t.value);render();return}if(!t.dataset||!t.dataset.f||!D)return;if(t.dataset.r){setPath(D,t.dataset.f,+t.value);render()}else if((t.dataset.f=='date'||t.dataset.f=='from')&&V!='set'){setPath(D,t.dataset.f,nd(t.value));if(V=='slEdit')render()}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id=='wsIn'){wsIn(t);return}if(t.id=='pqIn'){pqIn(t);return}if(t.id=='bkIn'){bkIn(t);return}if(t.id=='phIn'){phIn(t);return}if(t.id=='ptSel'){PTsel=t.value;render();return}if(t.id=='exSel'){const x=evExams()[+t.value];if(D&&x){D.code=x.code;D.title=x.title;D.date=x.date}render();return}if(t.id=='sidSel'){if(D){D.sid=t.value}render();return}if(t.id=='subjSel'){if(D){if(t.value=='__new'){const n=(prompt('نام درس را بنویسید:')||'').trim();if(n)D.subj=n}else D.subj=t.value;dfSave()}render();return}if(t.id=='sidAdd'){if(D&&t.value&&!D.sids.includes(t.value)){D.sids.push(t.value);if(V=='slEdit'&&!D.grade){const g=(stOf(t.value)||{}).grade;if(CGR.includes(g))D.grade=g}}render();return}if(!t.dataset||!t.dataset.f||!D)return;if(t.dataset.r){setPath(D,t.dataset.f,+t.value);render()}else if((t.dataset.f=='date'||t.dataset.f=='from')&&V!='set'){setPath(D,t.dataset.f,nd(t.value));if(V=='slEdit')render()}});
 document.addEventListener('input',autoSv);document.addEventListener('change',e=>{setTimeout(()=>autoSv(e),0)});
-function startRp(sid,date,slid,ctx){const st=stOf(sid),sl=S.sl.find(x=>x.id==slid);D={_new:1,slid:slid||'',desc:'',id:uid(),ctx:ctx||(st?(st.course=='grp'?'grp':st.course):'priv'),sid:sid||'',date:date||tdy(),title:'',subj:sl?sl.t:'',useWs:0,sc:15,rows:[],str:'',wk:'',hw:'',note:'',sent:0,ts:Date.now()};if(sl&&!sid&&sl.sids&&sl.sids.length)D.sid=sl.sids[0];go('rpEdit',{})}
+function startRp(sid,date,slid,ctx){const st=stOf(sid),sl=S.sl.find(x=>x.id==slid);D={_new:1,slid:slid||'',desc:'',id:uid(),ctx:ctx||(st?(st.course=='grp'?'grp':st.course):'priv'),sid:sid||'',date:date||tdy(),title:'',subj:sl?(sl.subj||sl.t):'',useWs:0,sc:15,rows:[],str:'',wk:'',hw:'',note:'',sent:0,ts:Date.now()};if(sl&&!sid&&sl.sids&&sl.sids.length)D.sid=sl.sids[0];go('rpEdit',{})}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t)return;const a=t.dataset.a.split(':'),k=a[0];
  if(k=='wsOnT'){D.wsOn=a[1]=='1';return render()}
  if(k=='wsUse'){if(a[1]=='0'){const w=D.ws;if(w&&((w.imgs||[]).length||(w.q||[]).length)&&!confirm('کاربرگ و تصحیح‌های این گزارش حذف شود؟'))return;delete D.ws;D._pin=null;WSP=null;D.useWs=0}else D.useWs=1;return render()}
  if(k=='wsfOpen')return wsfOpen();if(k.startsWith('wsf'))return wsfAct(k,a,t,e);
- if(k=='back')return back();
+ if(k=='undo')return undo();if(k=='back')return back();
  if(k=='fileOpen')return go('file',{sid:a[1]});if(k=='fileSend')return fileSend(a[1]);
  if(k=='go'){if(a[1]=='rpl')return go('rpl',{ctx:a[2]});if(a[1]=='course')return go('course',{c:a[2],tab:'pl'});return go(a[1])}
  if(k=='wk'){wk=a[1]=='0'?0:wk+(+a[1]);return render()}
@@ -713,15 +737,15 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='acDel'){if(!confirm('این مورد از حساب حذف شود؟'))return;const e=S.ac.find(q=>q.id==a[1]);if(e){S.ac=S.ac.filter(q=>q.id!=e.id);const x=e.sl&&S.sl.find(q=>q.id==e.sl);if(x&&x.dn)delete x.dn[e.od||e.d];save()}D=null;return back()}
  if(k=='acImg')return acImg();
  if(k=='acCp')return acCp();
- if(k=='slNew'){D={_new:1,id:uid(),t:'',kind:'priv',sids:[],rep:'w',d:wdi(a[1]==tdy()?tdy():a[1]),s:'16:00',e:'17:00',place:'',fee:'',date:'',from:a[1]};D.d=wdi(tdy());return go('slEdit')}
+ if(k=='slNew'){const f0=(mv||wk==0)?tdy():dadd(wkStart(tdy()),wk*7);D={_new:1,id:uid(),t:'',grade:'',subj:'',kind:'priv',sids:[],rep:'w',d:wdi(f0),s:'16:00',e:'17:00',place:'',fee:'',date:'',from:f0};return go('slEdit')}
  if(k=='slEdit'){D=clone(S.sl.find(x=>x.id==a[1]));if(a[2]&&D.rep=='o'){}D.sids=D.sids||[];return go('slEdit')}
- if(k=='slSave'){D.fee=Math.round(parseFloat(nd(D.fee).replace(/[^\d.]/g,''))||0);if(!D.t.trim()&&!D.sids.length)return toast('عنوان کلاس را بنویسید.');if(!(D.fee>0))return toast('هزینه‌ی هر جلسه را وارد کنید.');if(!D.s||!D.e||tm(D.e)<=tm(D.s))return toast('ساعت پایان باید بعد از ساعت شروع باشد.');
-  if(D.rep=='o'){D.date=nd(D.date);if(!okd(D.date))return toast('تاریخ را مثل ۱۴۰۵/۹/۱۰ بنویسید.');D.d=wdi(D.date)}else{D.from=D.from||tdy();if(D._new){D.from=dadd(wkStart(tdy()),wk*7)}}
+ if(k=='slSave'){D.fee=Math.round(parseFloat(nd(D.fee).replace(/[^\d.]/g,''))||0);if(!D.grade)return toast('پایه را انتخاب کنید.');if(!D.subj)return toast('درس را انتخاب کنید.');D.t=D.subj+' '+D.grade;S.ac.forEach(e=>{if(e.sl==D.id)e.t=D.t});if(!(D.fee>0))return toast('هزینه‌ی هر جلسه را وارد کنید.');if(!D.s||!D.e||tm(D.e)<=tm(D.s))return toast('ساعت پایان باید بعد از ساعت شروع باشد.');
+  if(D.rep=='o'){D.date=nd(D.date);if(!okd(D.date))return toast('تاریخ را مثل ۱۴۰۵/۹/۱۰ بنویسید.');D.d=wdi(D.date)}else{D.from=nd(D.from||'');if(!okd(D.from))return toast('تاریخ آغاز کلاس را از تقویم انتخاب کنید.')}
   const oth=S.sl.filter(x=>x.id!=D.id&&(D.rep=='o'?(x.rep=='o'?x.date==D.date:x.d==wdi(D.date)):(x.rep=='o'?wdi(x.date)==D.d:x.d==D.d))&&tm(x.s)<tm(D.e)&&tm(D.s)<tm(x.e));
   if(oth.length&&!confirm('این ساعت با «'+oth[0].t+'» ('+fd(oth[0].s)+' تا '+fd(oth[0].e)+') هم‌پوشانی دارد. باز هم ذخیره شود؟'))return;
   delete D._new;const i=S.sl.findIndex(x=>x.id==D.id);let note='';
   if(i>=0&&S.sl[i].rep!='o'&&D.rep!='o'&&S.sl[i].d!=D.d){const eff=dadd(wkStart(tdy()),Math.max(wk,1)*7),dh=(S.sl[i].dh||[]).slice();if(jn(eff)>jn(D.from||'1/1/1')){if(!dh.some(e=>e.to==eff))dh.push({to:eff,d:S.sl[i].d});D.dh=dh;note=' • روز جدید از '+dlb(eff)+' اعمال می‌شود'}else D.dh=dh}
-  if(i>=0)S.sl[i]=D;else S.sl.push(D);save();D=null;toast('✓ ذخیره شد'+note);return back()}
+  if(i>=0)S.sl[i]=D;else S.sl.push(D);save();const D0=D;D=null;toast('✓ ذخیره شد'+note+(D0.rep!='o'?' • اولین جلسه: '+dlb(firstOcc(D0.from,D0.d)):''));return back()}
  if(k=='slDel'){if(!confirm('این کلاس حذف شود؟ (برای همه‌ی هفته‌ها)'))return;S.sl=S.sl.filter(x=>x.id!=a[1]);save();return render()}
  if(k=='skip'){const x=S.sl.find(q=>q.id==a[1]);x.skip=(x.skip||[]).concat(a.slice(2).join(':'));save();open=null;return render()}
  if(k=='stNew'){D={_new:1,id:uid(),n:'',course:a[1]||'priv',courses:[a[1]||'priv'],grade:a[1]=='p7'?'هفتم':a[1]=='p8'?'هشتم':a[1]=='p9'?'نهم':'',parent:'',phone:'',eitaa:'',note:''};return go('stEdit')}
@@ -759,7 +783,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='wsT'){const x=S.sl.find(q=>q.id==a[1]);if(x){x.ws=x.ws||{};const kk=wsKey(a[2],a[3]=='_'?'':a[3]);if(x.ws[kk])delete x.ws[kk];else x.ws[kk]=1;save();render()}return}
  if(k=='dpo'){const v=nd((D&&D[a[1]])||''),z=(okd(v)?v:tdy()).split('/').map(Number);DPs={f:a[1],y:z[0],m:z[1]};return dpShow()}
  if(k=='dpm'){const ix=DPs.y*12+DPs.m-1+(+a[1]);DPs.y=Math.floor(ix/12);DPs.m=ix%12+1;return dpShow()}
- if(k=='dpd'){if(DPs&&D)D[DPs.f]=a[1];dpClose();return render()}
+ if(k=='dpd'){if(DPs&&D){D[DPs.f]=a[1];if(V=='slEdit'&&DPs.f=='from'&&D.rep!='o')D.d=wdi(a[1])}dpClose();return render()}
  if(k=='dpx')return dpClose();
  if(k=='phDel'){D.photo='';return render()}
  if(k=='gcs'){GC=a[1];return render()}
