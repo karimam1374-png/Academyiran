@@ -210,6 +210,12 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 .sgc-g{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .sgc-f{margin-top:18px}
 @media(max-width:600px){.sgc-g{grid-template-columns:1fr;gap:14px}}
+.sgcg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+.sgcg>.sgc{margin-bottom:0;min-width:0}
+.sgcg .sgc-h{padding:14px;gap:10px}.sgcg .sgc-b{padding:14px}
+.sgcg .sgc-g{grid-template-columns:1fr;gap:14px}
+.sgcg .sgc-m{min-width:0;flex:1 1 100%}
+@media(max-width:700px){.sgcg{grid-template-columns:1fr}}
 .sgc .l,.sgk .l{display:block;font-weight:800;font-size:14.5px;margin:0 0 7px}
 .sgc textarea,.sgk textarea{display:block;width:100%;box-sizing:border-box;min-height:104px;padding:11px 13px;border:1.5px solid var(--l);border-radius:12px;font:inherit;font-size:15px;line-height:1.95;background:var(--c);color:var(--t);resize:vertical;margin:0;text-align:right}
 .sgc textarea:focus,.sgk textarea:focus{outline:2px solid #a855f7;border-color:#a855f7}
@@ -1301,7 +1307,7 @@ function sgTabPerf(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return 
  <div class="sgc-f"><label class="l">📝 متن توصیفی گزارش</label>${ta(i,'desc',p.desc,'خالی = متن خودکار از نقاط قوت و ضعف',120)}<button class="bt g s" style="margin:8px 0 0" data-a="sgGen:${g.id}:${cur}:${i}">✨ تولید متن از نقاط قوت و ضعف</button></div>
  <div class="sgc-f"><label class="l">🔁 تصاویر نمونه‌سؤال تمرینی</label><div class="sgc-i"><label class="bt g s" style="cursor:pointer">🖼 افزودن عکس<input type="file" class="sgpq" accept="image/*" multiple style="display:none" data-g="${g.id}" data-k="${cur}" data-s="${i}"></label>${sgThumbs(pq,g,cur,i)}${pq.length?`<span class="m">${fd(pq.length)} تصویر</span>`:''}</div></div></div>
  <div class="sgc-o"><button class="bt s" style="background:#6d28d9" data-a="sgImg:${g.id}:${cur}:${i}">🖼 گزارش تصویری</button><button class="bt s g" data-a="sgPdf:${g.id}:${cur}:${i}">📄 ذخیره PDF</button><button class="bt s g" data-a="sgCopy:${g.id}:${cur}:${i}">📋 کپی متن</button></div></div>`}).join('');
- return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). موارد مشترک را در باکس بالا بنویسید و برای همه اعمال کنید؛ سپس برای هر دانش‌آموز موارد اختصاصی را در کارت خودش اضافه کنید.</p></div>${gbox}<div class="sgsep">گزارش هر دانش‌آموز (${fd(ids.length)} نفر)</div>${rows}`}
+ return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). موارد مشترک را در باکس بالا بنویسید و برای همه اعمال کنید؛ سپس برای هر دانش‌آموز موارد اختصاصی را در کارت خودش اضافه کنید.</p></div>${gbox}<div class="sgsep">گزارش هر دانش‌آموز (${fd(ids.length)} نفر)</div><div class="sgcg">${rows}</div>`}
 /* ----- قالب گزارش تصویری نیمه‌خصوصی (رنگ‌بندی بنفش) ----- */
 const sgCARD='background:#fff;border:1px solid #e4d9fb;border-radius:18px;box-shadow:0 6px 18px #5b21b614;',sgWRAP='padding:26px 30px;background:linear-gradient(180deg,#f5f0ff 0,#fff 220px)',
 sgHEAD=t=>HEAD(t).replace(/#0b1745/gi,'#2e1065').replace(/#1e3a8a/gi,'#5b21b6').replace(/#2563eb/gi,'#a855f7'),
