@@ -210,6 +210,11 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 .sgc-g{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .sgc-f{margin-top:18px}
 @media(max-width:600px){.sgc-g{grid-template-columns:1fr;gap:14px}}
+.sgq-c{background:var(--c);color:var(--t);border-radius:16px;padding:14px;margin:0 auto 10px;text-align:right;max-width:560px}
+.sgq-b{height:9px;background:var(--l);border-radius:9px;overflow:hidden;margin-top:8px}.sgq-b i{display:block;height:100%;background:linear-gradient(90deg,#7c3aed,#a855f7);transition:width .3s}
+.sgq-l{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px;margin:0 auto}
+.sgq-l .chip{font-size:12.5px;padding:5px 10px}
+#ov .bar .bt.sgq-ok{background:linear-gradient(135deg,#22c55e,#15803d)}
 .sgcg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
 .sgcg>.sgc{margin-bottom:0;min-width:0}
 .sgcg .sgc-h{padding:14px;gap:10px}.sgcg .sgc-b{padding:14px}
@@ -1214,7 +1219,7 @@ async function blobToPdf(blob){const buf=new Uint8Array(await blob.arrayBuffer()
 function showImg(blob,name,cap,onSent,st,regen){if(!blob)return;let f,url,cur,can=false,canP=false;
  const mkF=b=>{cur=b;if(url)URL.revokeObjectURL(url);f=new File([b],name,{type:'image/jpeg'});url=URL.createObjectURL(b);try{can=!!(navigator.canShare&&navigator.canShare({files:[f]}));canP=!!(navigator.canShare&&navigator.canShare({files:[new File([new Blob(['x'])],'a.pdf',{type:'application/pdf'})]}))}catch(e){can=false;canP=false}};mkF(blob);
  const o=$('#ov');o.className='on';o.innerHTML=`<div class="im"><img id="oim" src="${url}" alt=""></div><div class="bar"><p class="m" id="om" style="text-align:center;margin:0 0 6px">${can?'عکس آماده است. «ارسال» را بزنید و ایتا (یا بله) را انتخاب کنید.':'ارسال مستقیم در این مرورگر ممکن نیست. «ذخیره عکس» را بزنید و از داخل ایتا بفرستید.'}</p>${regen?'<div style="display:flex;align-items:center;gap:8px;margin:2px 0 4px"><button class="bt g s" id="ofm" style="margin:0;font-size:18px">A−</button><span class="m" id="ofl" style="flex:1;text-align:center"></span><button class="bt g s" id="ofp" style="margin:0;font-size:18px">A+</button></div>':''}${can?'<button class="bt" id="ogo">📤 ارسال (ایتا، بله، ...)</button>':''}<button class="bt g" id="osv">💾 ذخیره عکس</button><button class="bt g" id="opd">📄 ذخیره PDF</button>${canP?'<button class="bt g" id="opg">📤 ارسال PDF</button>':''}${cap?'<button class="bt g" id="ocp">📋 کپی متن کپشن</button>':''}${st&&st.eitaa?'<button class="bt" id="oei" style="background:linear-gradient(135deg,#22c55e,#15803d)">📨 ارسال به ایتای ولی'+(st.parent?' ('+E(st.parent)+')':'')+'</button>':''}<button class="bt r" id="ox">✕ بستن</button></div>`;
- const m=$('#om'),close=()=>{o.className='';o.innerHTML='';if(url)URL.revokeObjectURL(url)};$('#ox').onclick=close;const ei=$('#oei');if(ei)ei.onclick=async()=>{const id=String(st.eitaa).trim().replace(/^@/,'').replace(/^https?:\/\/(www\.)?eitaa\.com\//,'');if(cap)try{await navigator.clipboard.writeText(cap)}catch(e){}dlFile(f);m.textContent='کپشن کپی و عکس ذخیره شد. در چت باز‌شده عکس را پیوست و کپشن را Paste کنید.';setTimeout(()=>{location.href='https://eitaa.com/'+encodeURIComponent(id)},900)};
+ const m=$('#om'),close=()=>{o.className='';o.innerHTML='';if(url)URL.revokeObjectURL(url)};$('#ox').onclick=close;const ei=$('#oei');if(ei)ei.onclick=async()=>{const id=String(st.eitaa).trim().replace(/^@/,'').replace(/^https?:\/\/(www\.)?eitaa\.com\//,'');if(cap)try{await navigator.clipboard.writeText(cap)}catch(e){}dlFile(f);m.textContent='کپشن کپی و عکس ذخیره شد. در چت باز‌شده عکس را پیوست و کپشن را Paste کنید.';setTimeout(()=>sgqLink(sgqUrl(st.eitaa)||('https://eitaa.com/'+encodeURIComponent(id))),900)};
  const pdfF=async()=>new File([await blobToPdf(cur)],name.replace(/\.\w+$/,'')+'.pdf',{type:'application/pdf'});
  $('#opd').onclick=async()=>{m.textContent='در حال ساخت PDF…';try{dlFile(await pdfF());m.textContent='PDF ذخیره شد (معمولاً پوشه‌ی دانلودها).'}catch(e){m.textContent='ساخت PDF ناموفق بود.'}};
  const pg=$('#opg');if(pg)pg.onclick=async()=>{try{m.textContent='در حال ساخت PDF…';const p=await pdfF();if(cap)try{await navigator.clipboard.writeText(cap)}catch(e){}await navigator.share({files:[p]});m.textContent='✓ ارسال شد'}catch(e){if(e&&e.name=='AbortError')return;m.textContent='ارسال PDF انجام نشد؛ «ذخیره PDF» را بزنید.'}};
@@ -1274,7 +1279,7 @@ function sgBar(g,L,cur){const r=(g.ss||{})[cur]||{},ex=(g.extra||[]).find(x=>x.k
  return`<div class="k"><label class="f" style="margin-top:0">انتخاب جلسه</label>${L.length?`<select id="sgSessSel">${L.map(x=>{const q=(g.ss||{})[x.k]||{};return`<option value="${x.k}"${x.k==cur?' selected':''}>${dlb(x.k)} • ${fd(x.s)}${x.ex?' (اضافه)':''}${q.cancel?' — لغو شد':(q.att&&Object.keys(q.att).length?' ✓':'')}</option>`}).join('')}</select>`:'<p class="m">جلسه‌ای نیست؛ در «مشخصات» تاریخ شروع/پایان و زمان جلسات را ثبت کنید یا «جلسه‌ی اضافه» بسازید.</p>'}
  <div class="acb"><button class="bt s g" data-a="sgExtra:${g.id}">➕ جلسه‌ی اضافه / جبرانی</button>${cur?`<button class="bt s ${r.cancel?'':'r'}" data-a="sgCancel:${g.id}:${cur}">${r.cancel?'↩ فعال‌کردن جلسه':'⏸ لغو این جلسه'}</button>`:''}${ex?`<button class="bt s r" data-a="sgXDel:${g.id}:${ex.id}">🗑 حذف جلسه‌ی اضافه</button>`:''}</div></div>`}
 function sgTabStu(g){const ids=(g.sids||[]).filter(stOf),rest=S.st.filter(q=>!(g.sids||[]).includes(q.id));
- let h=`<div class="k"><h3>👥 دانش‌آموزان گروه (${fd(ids.length)} نفر)</h3>`+(ids.length?ids.map(i=>{const s=sgStat(g,i),pp=sgPay(g,i),m=SGPS[pp.st];return`<div class="ln" style="gap:12px;padding:10px 0;align-items:center"><span style="flex:0 0 auto">${av(stOf(i),56)}</span><div class="x"><b>${E(stN(i))}</b><div class="m">${(stOf(i)||{}).grade?E(stOf(i).grade)+' • ':''}${s.n?'حضور: '+fd(s.p+s.l)+' از '+fd(s.n)+' جلسه':'حضور و غیابی ثبت نشده'}</div><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><label class="bt g s" style="cursor:pointer;margin:0">📷 ${(stOf(i)||{}).photo?'تغییر عکس':'آپلود عکس'}<input type="file" class="sgph" accept="image/*" style="display:none" data-s="${i}"></label>${(stOf(i)||{}).photo?`<button class="bt r s" style="margin:0" data-a="sgPhDel:${g.id}:${i}">✕ حذف عکس</button>`:''}</div></div><span class="bdg" style="background:${m.b};color:${m.c}">${m.t}</span><button class="bt s r" data-a="sgRm:${g.id}:${i}">✕</button></div>`}).join(''):'<div class="emp">هنوز دانش‌آموزی ثبت‌نام نشده است.</div>')+`</div>
+ let h=`<div class="k"><h3>👥 دانش‌آموزان گروه (${fd(ids.length)} نفر)</h3>`+(ids.length?ids.map(i=>{const s=sgStat(g,i),pp=sgPay(g,i),m=SGPS[pp.st];return`<div class="ln" style="gap:12px;padding:10px 0;align-items:center"><span style="flex:0 0 auto">${av(stOf(i),56)}</span><div class="x"><b>${E(stN(i))}</b><div class="m">${(stOf(i)||{}).grade?E(stOf(i).grade)+' • ':''}${s.n?'حضور: '+fd(s.p+s.l)+' از '+fd(s.n)+' جلسه':'حضور و غیابی ثبت نشده'}</div><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap"><label class="bt g s" style="cursor:pointer;margin:0">📷 ${(stOf(i)||{}).photo?'تغییر عکس':'آپلود عکس'}<input type="file" class="sgph" accept="image/*" style="display:none" data-s="${i}"></label>${(stOf(i)||{}).photo?`<button class="bt r s" style="margin:0" data-a="sgPhDel:${g.id}:${i}">✕ حذف عکس</button>`:''}</div><input dir="ltr" data-sgi="eitaa" data-g="${g.id}" data-s="${i}" value="${E((stOf(i)||{}).eitaa||'')}" placeholder="📨 آیدی ایتا/بله ولی (مثلاً @username)" autocomplete="off" autocapitalize="off" spellcheck="false" style="margin:8px 0 0;text-align:left"></div><span class="bdg" style="background:${m.b};color:${m.c}">${m.t}</span><button class="bt s r" data-a="sgRm:${g.id}:${i}">✕</button></div>`}).join(''):'<div class="emp">هنوز دانش‌آموزی ثبت‌نام نشده است.</div>')+`</div>
  <div class="k"><h3>➕ ثبت‌نام دانش‌آموز در این گروه</h3>${rest.length?`<label class="f">انتخاب از دانش‌آموزان ثبت‌شده</label><select id="sgAddSel"><option value="">انتخاب دانش‌آموز…</option>${rest.map(q=>`<option value="${q.id}">${E(q.n)}${csN(q)?' — '+E(csN(q)):''}</option>`).join('')}</select>`:''}
  <label class="f">یا دانش‌آموز تازه (نام و نام‌خانوادگی)</label><div class="row"><input id="sgNewName" placeholder="نام دانش‌آموز جدید"><button class="bt s n" style="margin:4px 0" data-a="sgNewSt:${g.id}">➕ ثبت‌نام</button></div></div>`;return h}
 function sgTabAtt(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return h;const r=(g.ss||{})[cur]||{},A=r.att||{},ids=(g.sids||[]).filter(stOf);
@@ -1307,7 +1312,7 @@ function sgTabPerf(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return 
  <div class="sgc-f"><label class="l">📝 متن توصیفی گزارش</label>${ta(i,'desc',p.desc,'خالی = متن خودکار از نقاط قوت و ضعف',120)}<button class="bt g s" style="margin:8px 0 0" data-a="sgGen:${g.id}:${cur}:${i}">✨ تولید متن از نقاط قوت و ضعف</button></div>
  <div class="sgc-f"><label class="l">🔁 تصاویر نمونه‌سؤال تمرینی</label><div class="sgc-i"><label class="bt g s" style="cursor:pointer">🖼 افزودن عکس<input type="file" class="sgpq" accept="image/*" multiple style="display:none" data-g="${g.id}" data-k="${cur}" data-s="${i}"></label>${sgThumbs(pq,g,cur,i)}${pq.length?`<span class="m">${fd(pq.length)} تصویر</span>`:''}</div></div></div>
  <div class="sgc-o"><button class="bt s" style="background:#6d28d9" data-a="sgImg:${g.id}:${cur}:${i}">🖼 گزارش تصویری</button><button class="bt s g" data-a="sgPdf:${g.id}:${cur}:${i}">📄 ذخیره PDF</button><button class="bt s g" data-a="sgCopy:${g.id}:${cur}:${i}">📋 کپی متن</button></div></div>`}).join('');
- return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). موارد مشترک را در باکس بالا بنویسید و برای همه اعمال کنید؛ سپس برای هر دانش‌آموز موارد اختصاصی را در کارت خودش اضافه کنید.</p></div>${gbox}<div class="sgsep">گزارش هر دانش‌آموز (${fd(ids.length)} نفر)</div><div class="sgcg">${rows}</div>`}
+ return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). موارد مشترک را در باکس بالا بنویسید و برای همه اعمال کنید؛ سپس برای هر دانش‌آموز موارد اختصاصی را در کارت خودش اضافه کنید.</p></div>${gbox}<div class="sgsep">گزارش هر دانش‌آموز (${fd(ids.length)} نفر)</div><div class="sgcg">${rows}</div>${sgqBox(g,cur,ids)}`}
 /* ----- قالب گزارش تصویری نیمه‌خصوصی (رنگ‌بندی بنفش) ----- */
 const sgCARD='background:#fff;border:1px solid #e4d9fb;border-radius:18px;box-shadow:0 6px 18px #5b21b614;',sgWRAP='padding:26px 30px;background:linear-gradient(180deg,#f5f0ff 0,#fff 220px)',
 sgHEAD=t=>HEAD(t).replace(/#0b1745/gi,'#2e1065').replace(/#1e3a8a/gi,'#5b21b6').replace(/#2563eb/gi,'#a855f7'),
@@ -1352,10 +1357,78 @@ function vSgv(){if(D&&D._sgx){const g0=sgOf(VP.id);if(D.xd&&g0){const s0=(g0.tim
 function sgRepText(g,k,id){const r=(g.ss||{})[k]||{},p=((r.pf)||{})[id]||{},at=(r.att||{})[id],m=sgMast(p),str=lines(p.str),wk=lines(p.wk),hw=lines(p.rc);
  return['📝 گزارش عملکرد دانش‌آموز عزیز','👤 '+stN(id),'👥 '+g.name,'📆 '+dlb(k),at?'✅ وضعیت حضور: '+({p:'حاضر',l:'حاضر (با تأخیر)',a:'غایب'}[at]):'',r.topic?'📖 مبحث جلسه: '+r.topic:'',m?'🎯 میزان تسلط: '+fd(Math.round(m.pc))+'٪ ('+LV(m.pc/5).t+')':'',(p.desc&&p.desc.trim())||sgDescr(g,k,id),str.length?'✅ نقاط قوت: '+str.join('، '):'',wk.length?'⚠️ نقاط ضعف: '+wk.join('، '):'',hw.length?'📌 تکلیف و توصیه: '+hw.join('، '):'',p.nt?'💬 '+p.nt:'','🏫 '+S.info.brand+'\n'+SL1+'\n'+SL2,'👨🏻\u200d🏫 '+S.info.teacher].filter(Boolean).join('\n')}
 const sgCp=t=>(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('✓ گزارش کپی شد'),()=>toast('کپی خودکار انجام نشد.'));
+
+/* ===== ارسال یکجا‌ی گزارش عملکرد به آیدی ایتا/بله ===== */
+const SGQK=KEY+'.sgq',SGQL={w:'در انتظار',r:'آماده',o:'منتظر تأیید',d:'✓ ارسال شد',s:'رد شد',n:'بدون آیدی',e:'خطا'};
+let SGQ=null;
+function sgqUrl(v){v=String(v||'').trim();if(!v)return'';if(/^https:\/\/[^\s]+$/i.test(v))return v;const id=v.replace(/^@/,'').replace(/\s+/g,'');if(!/^[A-Za-z0-9_.]{3,64}$/.test(id))return'';return'https://eitaa.com/'+encodeURIComponent(id)}
+function sgqLink(u){if(!u)return;try{const a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener noreferrer';document.body.appendChild(a);a.click();a.remove()}catch(e){}}
+function sgqSave(){const q=SGQ;if(!q)return;try{localStorage.setItem(SGQK,JSON.stringify({gid:q.gid,k:q.k,ids:q.ids,st:q.st,i:q.i,t:Date.now()}))}catch(e){}}
+function sgqLoad(gid,k){try{const v=JSON.parse(localStorage.getItem(SGQK)||'null');if(!v||v.gid!=gid||v.k!=k||Date.now()-v.t>12*36e5||!Array.isArray(v.ids))return null;const ids=v.ids.filter(stOf);if(!ids.some(i=>!/^[dsn]$/.test((v.st||{})[i]||'w')))return null;return{ids,st:v.st||{},i:v.i}}catch(e){return null}}
+function sgqBox(g,k,ids){const ni=ids.filter(i=>sgqUrl((stOf(i)||{}).eitaa)).length,sv=sgqLoad(g.id,k),dn=sv?sv.ids.filter(i=>sv.st[i]=='d').length:0;
+ return`<div class="sgk" style="margin-top:8px"><h3>📨 ارسال گزارش عملکرد برای همه (ایتا)</h3><p class="m" style="margin:0">${fd(ni)} نفر از ${fd(ids.length)} نفر آیدی ثبت‌شده دارند${ni<ids.length?' (آیدی بقیه را در تب «دانش‌آموزان» وارد کنید)':''}. برنامه برای هر نفر به‌نوبت گزارش تصویری را می‌سازد، عکس را ذخیره و کپشن را کپی می‌کند و چت ایتای او را باز می‌کند؛ فقط عکس را پیوست و ارسال می‌کنید. ایتا اجازه‌ی ارسال کاملاً بی‌دخالت از داخل برنامه را نمی‌دهد.</p><div class="acb"><button class="bt" style="background:#6d28d9" data-a="sgSendAll:${g.id}:${k}">📨 شروع ارسال یکجا</button>${sv?`<button class="bt s g" data-a="sgSendResume:${g.id}:${k}">▶ ادامه‌ی ارسال قبلی (${fd(dn)} از ${fd(sv.ids.length)})</button>`:''}</div></div>`}
+async function sgqBuild(g,k,sid){const p=(((g.ss||{})[k]||{}).pf||{})[sid]||{};await pqPre({pq:p.pq||[]});
+ const b=await Promise.race([htmlImg(sgHtml(g,k,sid),760),new Promise((_,no)=>setTimeout(()=>no(new Error('timeout')),30000))]);if(!b)throw new Error('empty');return b}
+function sgqStart(g,k,fresh){if(SGQ&&SGQ.busy&&Date.now()-SGQ.bt<35000)return toast('ساخت گزارش قبلی در حال انجام است…');
+ const R=(g.ss||{})[k]||{},pres=!!VP.sgPres;let ids=(g.sids||[]).filter(stOf).filter(i=>!pres||((R.att||{})[i]!='a')),st={};
+ if(!fresh){const sv=sgqLoad(g.id,k);if(sv){ids=sv.ids;st=sv.st}}
+ if(!ids.length)return toast('دانش‌آموزی برای ارسال پیدا نشد.');
+ ids.forEach(i=>{const s=stOf(i);if(!sgqUrl(s&&s.eitaa))st[i]='n';else if(!st[i]||/^[nre]$/.test(st[i]))st[i]='w'});
+ if(ids.every(i=>st[i]=='n'))return toast('برای هیچ‌کدام آیدی ایتا ثبت نشده؛ در تب «دانش‌آموزان» وارد کنید.');
+ SGQ={gid:g.id,k,ids,st,i:ids.findIndex(i=>!/^[dsn]$/.test(st[i])),tok:0,cur:null,busy:false,bt:0};
+ const o=$('#ov');o.className='on';o.onclick=sgqClick;sgqSave();if(SGQ.i<0)return sgqUI();sgqPrep()}
+async function sgqPrep(){const q=SGQ;if(!q||q.i<0)return;const id=q.ids[q.i],g=sgOf(q.gid);
+ if(!g||!stOf(id)){q.st[id]='s';return sgqNext()}
+ if(q.cur&&q.cur.id==id){q.busy=false;return sgqUI()}
+ const tok=++q.tok;q.cur=null;q.busy=true;q.bt=Date.now();sgqUI();
+ try{const b=await sgqBuild(g,q.k,id);if(SGQ!==q||q.tok!=tok)return;
+  q.cur={id,file:new File([b],sgFn(g,q.k,id)+'.jpg',{type:'image/jpeg'}),cap:sgCap(g,q.k,id)};q.busy=false;if(/^[we]$/.test(q.st[id]))q.st[id]='r';sgqSave();sgqUI()}
+ catch(e){if(SGQ!==q||q.tok!=tok)return;q.busy=false;q.st[id]='e';sgqUI('ساخت گزارش ناموفق بود. «تلاش دوباره» یا «رد کردن» را بزنید.')}}
+function sgqNext(){const q=SGQ;if(!q)return;const n=q.ids.length;let j=-1;for(let d=1;d<=n;d++){const x=(Math.max(q.i,0)+d)%n;if(!/^[dsn]$/.test(q.st[q.ids[x]])){j=x;break}}
+ q.cur=null;q.busy=false;q.tok++;q.i=j;sgqSave();if(j<0)return sgqUI();sgqPrep()}
+function sgqOpen(){const q=SGQ;if(!q||q.i<0||!q.cur)return;const id=q.ids[q.i];if(q.cur.id!=id)return;const s=stOf(id),u=sgqUrl(s&&s.eitaa);if(!u)return toast('آیدی ثبت‌شده معتبر نیست.');
+ try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(q.cur.cap).catch(()=>{})}catch(e){}
+ try{dlFile(q.cur.file)}catch(e){}
+ if(q.st[id]!='d')q.st[id]='o';sgqSave();sgqUI('عکس ذخیره و کپشن کپی شد؛ چت ایتا باز می‌شود. عکس را پیوست و کپشن را Paste کنید، بعد برگردید.');
+ setTimeout(()=>sgqLink(u),700)}
+function sgqShare(){const q=SGQ;if(!q||!q.cur)return;try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(q.cur.cap).catch(()=>{})}catch(e){}
+ try{navigator.share({files:[q.cur.file]}).catch(()=>{})}catch(e){toast('اشتراک‌گذاری در این مرورگر ممکن نیست.')}}
+function sgqClose(){const q=SGQ,fin=q&&q.i<0;SGQ=null;const o=$('#ov');o.onclick=null;o.className='';o.innerHTML='';if(fin)try{localStorage.removeItem(SGQK)}catch(e){}if(V=='sgv'){const y=scrollY;try{render()}catch(e){}scrollTo(0,y)}}
+function sgqClick(ev){const b=ev.target.closest&&ev.target.closest('[data-q]');if(!b||!SGQ)return;const q=SGQ,a=b.dataset.q.split(':'),c=a[0],id=q.i>=0?q.ids[q.i]:null;
+ if(c=='x')return sgqClose();
+ if(c=='go'){const x=+a[1],t=q.ids[x];if(q.st[t]=='n')return toast('برای این دانش‌آموز آیدی ثبت نشده است.');if(q.st[t]=='s')q.st[t]='w';q.cur=null;q.tok++;q.busy=false;q.i=x;sgqSave();return sgqPrep()}
+ if(c=='open')return sgqOpen();if(c=='share')return sgqShare();
+ if(c=='retry'){if(id){q.st[id]='w';q.cur=null}return sgqPrep()}
+ if(c=='done'&&id){q.st[id]='d';return sgqNext()}
+ if(c=='skip'&&id){if(q.st[id]!='d')q.st[id]='s';return sgqNext()}}
+function sgqUI(msg){const q=SGQ,o=$('#ov');if(!q||!o)return;const g=sgOf(q.gid)||{name:''},ids=q.ids,n=ids.length,cnt=k=>ids.filter(i=>q.st[i]==k).length,dn=cnt('d'),id=q.i>=0?ids[q.i]:null,s=id?stOf(id):null;
+ const head=`<div class="sgq-c"><b>📨 ارسال گزارش — ${E(g.name)}</b><div class="m" style="margin:2px 0 0">${fd(dn)} از ${fd(n)} نفر ارسال شد</div><div class="sgq-b"><i style="width:${n?Math.round(100*dn/n):0}%"></i></div></div>`;
+ const chips=`<div class="sgq-l">${ids.map((i,x)=>`<button class="chip${x==q.i?' on':''}" data-q="go:${x}" style="margin:0">${E(stN(i))} • ${SGQL[q.st[i]]||''}</button>`).join('')}</div>`;
+ let body='',btn='';
+ if(id){const st=q.st[id],u=sgqUrl(s&&s.eitaa),ready=!!(q.cur&&q.cur.id==id),canSh=!!(navigator.share&&navigator.canShare);
+  const m=msg||(q.busy?'در حال ساخت گزارش…':st=='o'?'چت ایتا باز شد. پس از ارسال برگردید و «ارسال شد» را بزنید.':st=='e'?'ساخت گزارش ناموفق بود.':ready?'گزارش آماده است. «ارسال به ایتا» را بزنید: عکس ذخیره، کپشن کپی و چت باز می‌شود.':'');
+  body=`<div class="sgq-c"><div style="display:flex;align-items:center;gap:12px">${av(s,56)}<div style="flex:1;min-width:0"><b style="font-size:18px">${E(stN(id))}</b><div class="m" dir="ltr" style="text-align:right">${E((s&&s.eitaa)||'')}</div></div><span class="bdg">${SGQL[st]||''}</span></div><p class="m" style="margin:10px 0 0">${E(m)}</p>${ready&&u&&(st=='o'||st=='d')?`<p class="m" style="margin:6px 0 0">اگر چت باز نشد: <a href="${E(u)}" target="_blank" rel="noopener noreferrer">باز کردن چت</a></p>`:''}</div>`;
+  if(ready)btn+=`<button class="bt${st=='r'?' sgq-ok':' g'}" data-q="open">📨 ${st=='r'?'ارسال به ایتا':'باز کردن دوباره‌ی چت'}</button>`;
+  if(st=='o')btn+=`<button class="bt sgq-ok" data-q="done">✓ ارسال شد — بعدی</button>`;
+  if(st=='e')btn+=`<button class="bt" data-q="retry">↻ تلاش دوباره</button>`;
+  if(ready&&canSh)btn+=`<button class="bt g s" data-q="share">📤 اشتراک‌گذاری دستی</button>`;
+  btn+=`<button class="bt g s" data-q="skip">⏭ ${st=='d'?'بعدی':'رد کردن'}</button>`}
+ else{const no=ids.filter(i=>q.st[i]=='n').map(stN),sk=ids.filter(i=>q.st[i]=='s').map(stN);
+  body=`<div class="sgq-c"><b style="font-size:17px">${dn?'✓ ارسال تمام شد':'ارسالی انجام نشد'}</b><p class="m" style="margin:8px 0 0">${fd(dn)} نفر ارسال شد.${no.length?'<br>بدون آیدی: '+E(no.join('، ')):''}${sk.length?'<br>ردشده (با لمس نامشان برمی‌گردید): '+E(sk.join('، ')):''}</p></div>`}
+ o.innerHTML=`<div class="im">${head}${body}${chips}</div><div class="bar">${btn}<button class="bt r" data-q="x">✕ بستن${id?' (پیشرفت ذخیره می‌شود)':''}</button></div>`}
+/* بازگشت از ایتا: قفل/هنگ نکند */
+function sgqBack(){try{if(document.visibilityState&&document.visibilityState!='visible')return;
+ document.querySelectorAll('body>div[style*="-9999px"]').forEach(x=>{if(!SGQ||!SGQ.busy)x.remove()});
+ const o=$('#ov');if(o&&o.className=='on'&&!o.firstChild&&!SGQ)o.className='';
+ const q=SGQ;if(!q)return;
+ if(q.busy&&Date.now()-q.bt>35000){q.busy=false;q.cur=null;return sgqPrep()}
+ if(q.i>=0&&q.st[q.ids[q.i]]=='o')sgqUI('به برنامه برگشتید. اگر گزارش را در ایتا فرستادید «ارسال شد — بعدی» را بزنید.')}catch(e){}}
+document.addEventListener('visibilitychange',sgqBack);addEventListener('pageshow',sgqBack);addEventListener('focus',sgqBack);
 document.addEventListener('input',e=>{const t=e.target,w=t.dataset&&t.dataset.sgi;if(!w)return;const g=sgOf(t.dataset.g);if(!g)return;
  if(w=='topic'){sgRec(g,t.dataset.k).topic=t.value}
  else if(w=='pf'){const R=sgRec(g,t.dataset.k);R.pf=R.pf||{};const sid=t.dataset.s,p=R.pf[sid]=R.pf[sid]||{},fl=t.dataset.fl;let v=t.value;if(fl=='mp'){v=String(nd(v)).replace(/[٫,]/g,'.');const n=parseFloat(v);if(!isNaN(n))v=String(Math.max(0,Math.min(100,n)))}p[fl]=v;if(fl=='str'||fl=='wk'){const c=document.getElementById('sgm_'+sid);if(c)c.innerHTML=sgMastCell(g,t.dataset.k,sid)}}
  else if(w=='gen'){const R=sgRec(g,t.dataset.k);R.gen=R.gen||{};R.gen[t.dataset.fl]=t.value}
+ else if(w=='eitaa'){const q=stOf(t.dataset.s);if(q)q.eitaa=t.value}
  else if(w=='pay'){const d=String(nd(t.value)).replace(/\D/g,'');t.value=mny(d);g.pay=g.pay||{};const p=g.pay[t.dataset.s]=g.pay[t.dataset.s]||{};p.paid=+d||0;const f=sgFee(g);p.st=f>0?(p.paid>=f?'f':p.paid>0?'p':'u'):(p.paid>0?'p':(p.st||'u'))}
  save()});
 document.addEventListener('change',e=>{const t=e.target;if(V=='sgv'){if(t.classList&&t.classList.contains('sgpq')){sgPqIn(t);return}if(t.classList&&t.classList.contains('sgph')){sgPhIn(t);return}if(t.id=='sgSessSel'){VP.sess=t.value;render();return}
@@ -1382,7 +1455,7 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='sgExtra'){const z=tdy().split('/').map(Number);D={_sgx:1,xd:''};DPs={f:'xd',y:z[0],m:z[1]};return dpShow()}
  if(k=='sgXDel'){if(!confirm('این جلسه‌ی اضافه (با حضور و غیاب و گزارش آن) حذف شود؟'))return;const x=(g.extra||[]).find(q=>q.id==a[2]);g.extra=(g.extra||[]).filter(q=>q.id!=a[2]);if(x&&g.ss)delete g.ss[x.k];VP.sess='';save();return render()}
  if(k=='sgPaySt'){g.pay=g.pay||{};const p=g.pay[a[2]]=g.pay[a[2]]||{};p.st=a[3];const f=sgFee(g);if(a[3]=='f'&&f>0)p.paid=f;if(a[3]=='u')p.paid=0;save();render();scrollTo(0,sy);return}
- if(k=='sgImg')return sgImg(g,a[2],a[3]);if(k=='sgPdf')return sgPdf(g,a[2],a[3]);
+ if(k=='sgSendAll')return sgqStart(g,a[2],true);if(k=='sgSendResume')return sgqStart(g,a[2],false);if(k=='sgImg')return sgImg(g,a[2],a[3]);if(k=='sgPdf')return sgPdf(g,a[2],a[3]);
  if(k=='sgGen'){const R=sgRec(g,a[2]);R.pf=R.pf||{};const p=R.pf[a[3]]=R.pf[a[3]]||{};if(!sgMast(p)&&!lines(p.str).length&&!lines(p.wk).length&&!lines(p.rc).length)return toast('ابتدا نقاط قوت، ضعف یا توصیه را بنویسید.');p.desc=sgDescr(g,a[2],a[3]);save();render();scrollTo(0,sy);return}
  if(k=='sgPqDel'){const R=sgRec(g,a[2]),p=a[3]=='__gen'?R.gen:((R.pf)||{})[a[3]];if(!p||!p.pq)return;if(!confirm('این تصویر حذف شود؟'))return;p.pq.splice(+a[4],1);save();render();scrollTo(0,sy);return}
 
