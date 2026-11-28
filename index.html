@@ -200,6 +200,29 @@ input[type=range]{padding:0;height:34px;accent-color:var(--a)}
 .sgb{display:flex;gap:6px;flex:0 0 min(310px,66%)}.sgb button{flex:1;min-width:0;border:2px solid var(--l);background:var(--c);color:var(--t);border-radius:12px;padding:8px 2px;font-weight:800;font-size:13.5px;line-height:1.3}
 .sgt td{vertical-align:top}.sgt textarea{margin:0}
 .sgb .p.on{background:#16a34a;border-color:#16a34a;color:#fff}.sgb .l.on{background:#d97706;border-color:#d97706;color:#fff}.sgb .a.on{background:#dc2626;border-color:#dc2626;color:#fff}
+
+/* گزارش عملکرد نیمه‌خصوصی: کارت برای هر دانش‌آموز + باکس عمومی */
+.sgc{padding:0;overflow:hidden;margin-bottom:20px;border:1.5px solid #ddd0fa;box-shadow:0 6px 18px #5b21b61a}
+.sgc-h{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 18px;background:var(--soft);border-bottom:1px solid #ddd0fa}
+.sgc-n{flex:1;min-width:150px}.sgc-n b{display:block;font-size:19px;color:#7c3aed;margin-bottom:4px}
+.sgc-m{text-align:center;min-width:112px;background:var(--c);border:1.5px solid #ddd0fa;border-radius:14px;padding:8px 12px}
+.sgc-b{padding:18px}
+.sgc-g{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sgc-f{margin-top:18px}
+@media(max-width:600px){.sgc-g{grid-template-columns:1fr;gap:14px}}
+.sgc .l,.sgk .l{display:block;font-weight:800;font-size:14.5px;margin:0 0 7px}
+.sgc textarea,.sgk textarea{display:block;width:100%;box-sizing:border-box;min-height:104px;padding:11px 13px;border:1.5px solid var(--l);border-radius:12px;font:inherit;font-size:15px;line-height:1.95;background:var(--c);color:var(--t);resize:vertical;margin:0;text-align:right}
+.sgc textarea:focus,.sgk textarea:focus{outline:2px solid #a855f7;border-color:#a855f7}
+.sgc .gi{width:70px;font-size:18px;font-weight:800;padding:6px 2px}
+.sgc-i{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.sgc-i>label.bt{margin:0}
+.sgc-o{display:flex;flex-wrap:wrap;gap:10px;padding:14px 18px;background:var(--soft);border-top:1px solid #ddd0fa}
+.sgc-o .bt{flex:1 1 140px;width:auto;margin:0}
+.sgk{border:2px solid #a78bfa;background:var(--c);padding:18px;margin-bottom:22px;box-shadow:0 8px 22px #7c3aed24;border-radius:18px}
+.sgk h3{margin:0 0 4px;color:#7c3aed;font-size:18px}
+.sgk .sgc-f{margin-top:16px}
+.sgk .acb{margin-top:18px;gap:10px}
+.sgk .acb .bt{flex:1 1 170px}
+.sgsep{display:flex;align-items:center;gap:10px;margin:6px 2px 14px;color:var(--m);font-weight:800;font-size:14px}.sgsep:before,.sgsep:after{content:'';flex:1;height:1px;background:var(--l)}
 </style></head><body><div id="app"></div><div id="dp"></div><div id="ov"></div><div id="wsf"></div><div id="toast"></div>
 <script>
 (function(){'use strict';
@@ -1244,24 +1267,32 @@ function sgTabAtt(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return h
  h+=`<div class="k"${r.cancel?' style="opacity:.55"':''}><h3>✅ حضور و غیاب — ${dlb(cur)}</h3><input data-sgi="topic" data-g="${g.id}" data-k="${cur}" value="${E(r.topic||'')}" placeholder="مبحث تدریس‌شده در این جلسه (اختیاری)">`+
  (ids.length?`<button class="bt s g" data-a="sgAll:${g.id}:${cur}">✓ همه حاضر</button>`+ids.map(i=>`<div class="ln"><div class="x"><b>${E(stN(i))}</b></div><div class="sgb">${['p','l','a'].map(v=>`<button class="${v}${A[i]==v?' on':''}" data-a="sgAt:${g.id}:${cur}:${i}:${v}">${v=='p'?'✓ ':v=='l'?'⏰ ':'✗ '}${SGAT[v]}</button>`).join('')}</div></div>`).join('')+`<p class="m" style="margin-top:8px">حاضر: ${fd(c.p)} • تأخیر: ${fd(c.l)} • غایب: ${fd(c.a)} • ثبت‌نشده: ${fd(ids.length-c.p-c.l-c.a)}</p>`:'<div class="emp">ابتدا در تب «دانش‌آموزان» ثبت‌نام کنید.</div>')+'</div>';return h}
 const sgPqTried=new Set();
-function sgPqIds(){const o=[];S.sg.forEach(g=>Object.keys(g.ss||{}).forEach(k=>Object.keys((g.ss[k].pf)||{}).forEach(i=>((g.ss[k].pf[i]||{}).pq||[]).forEach(x=>o.push(x)))));return o}
+function sgPqIds(){const o=[];S.sg.forEach(g=>Object.keys(g.ss||{}).forEach(k=>{Object.keys((g.ss[k].pf)||{}).forEach(i=>((g.ss[k].pf[i]||{}).pq||[]).forEach(x=>o.push(x)));((g.ss[k].gen||{}).pq||[]).forEach(x=>o.push(x))}));return o}
 const sgLV=sc=>{const l=LV(sc);return l.c=='#1d4ed8'?{t:l.t,c:'#7c3aed',b:'#ede9fe'}:l.c=='#0e7490'?{t:l.t,c:'#c026d3',b:'#fae8ff'}:l};
 function sgMast(p){p=p||{};const A=autoPct(p.str,p.wk);if(A)return{pc:A.p,auto:1,A};const m=String(nd(p.mp==null?'':p.mp)).replace(/[٫,]/g,'.');if(m!==''&&!isNaN(parseFloat(m)))return{pc:Math.max(0,Math.min(100,parseFloat(m)))};return null}
 function sgMastCell(g,k,sid){const p=((((g.ss||{})[k]||{}).pf)||{})[sid]||{},m=sgMast(p);if(m&&m.auto)return`<b style="font-size:19px;color:${sgLV(m.pc/5).c}">${fd(Math.round(m.pc))}٪</b><div class="m" style="font-size:11.5px">خودکار از قوت/ضعف</div>`;
  return`<input class="gi" inputmode="numeric" data-sgi="pf" data-g="${g.id}" data-k="${k}" data-s="${sid}" data-fl="mp" value="${E(fd(p.mp==null?'':p.mp))}" placeholder="٪"><div class="m" style="font-size:11.5px">دستی (۰ تا ۱۰۰)</div>`}
-function sgTabPerf(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return h;const r=(g.ss||{})[cur]||{},ids=(g.sids||[]).filter(stOf);
+const sgThumbs=(ids,g,k,sid)=>(ids||[]).map((id,n)=>`<div style="position:relative">${PQC[id]?`<img src="${PQC[id]}" alt="" style="width:76px;height:76px;object-fit:cover;border-radius:10px;border:1px solid var(--l);display:block">`:'<div class="m" style="width:76px;height:76px;display:flex;align-items:center;justify-content:center">…</div>'}<button class="bt r s" style="position:absolute;top:-7px;right:-7px;margin:0;padding:0;width:24px;height:24px;line-height:24px;font-size:12px;border-radius:50%" data-a="sgPqDel:${g.id}:${k}:${sid}:${n}">✕</button></div>`).join('');
+function sgTabPerf(g){const{L,cur}=sgSel(g);let h=sgBar(g,L,cur);if(!cur)return h;const r=(g.ss||{})[cur]||{},ids=(g.sids||[]).filter(stOf),gen=r.gen||{};
  if(!ids.length)return h+'<div class="emp">ابتدا در تب «دانش‌آموزان» ثبت‌نام کنید.</div>';
- const need=[];ids.forEach(i=>(((r.pf||{})[i]||{}).pq||[]).forEach(x=>{if(!(x in PQC)&&!sgPqTried.has(x))need.push(x)}));
+ const need=[];ids.forEach(i=>(((r.pf||{})[i]||{}).pq||[]).forEach(x=>{if(!(x in PQC)&&!sgPqTried.has(x))need.push(x)}));(gen.pq||[]).forEach(x=>{if(!(x in PQC)&&!sgPqTried.has(x))need.push(x)});
  if(need.length){need.forEach(x=>sgPqTried.add(x));pqPre({pq:need}).then(()=>{if(V=='sgv'&&VP.tab=='perf'){const y=scrollY;render();scrollTo(0,y)}})}
- const ta=(i,f,v,ph)=>`<textarea class="gi" style="width:210px;min-height:96px;text-align:right;margin:0;white-space:pre-wrap" data-sgi="pf" data-g="${g.id}" data-k="${cur}" data-s="${i}" data-fl="${f}" placeholder="${ph}">${E(v||'')}</textarea>`;
+ const ta=(i,f,v,ph,mh)=>`<textarea data-sgi="pf" data-g="${g.id}" data-k="${cur}" data-s="${i}" data-fl="${f}" placeholder="${ph}"${mh?` style="min-height:${mh}px"`:''}>${E(v||'')}</textarea>`,
+ gta=(f,ph)=>`<textarea data-sgi="gen" data-g="${g.id}" data-k="${cur}" data-fl="${f}" placeholder="${ph}">${E(gen[f]||'')}</textarea>`,
+ pres=!!VP.sgPres,nTarget=ids.filter(i=>!pres||((r.att||{})[i]!='a')).length,
+ gbox=`<div class="sgk"><h3>📣 ثبت عمومی برای همه‌ی دانش‌آموزان</h3><p class="m" style="margin:0">آنچه این‌جا می‌نویسید یا عکسی که می‌گذارید، با دکمه‌ی «اعمال برای همه» به گزارش تک‌تک دانش‌آموزان اضافه می‌شود. نوشته‌های قبلی هر نفر پاک نمی‌شود و موارد تکراری دوباره اضافه نمی‌گردد.</p>
+ <div class="sgc-g sgc-f"><div><label class="l" style="color:#15803d">✅ نقاط قوت (برای همه)</label>${gta('str','هر مورد در یک خط')}</div><div><label class="l" style="color:#b45309">⚠️ نقاط ضعف (برای همه)</label>${gta('wk','هر مورد در یک خط')}</div></div>
+ <div class="sgc-g sgc-f"><div><label class="l" style="color:#1d4ed8">📌 تکلیف و توصیه (برای همه)</label>${gta('rc','تکلیف یا توصیه‌ی مشترک برای جلسه‌ی بعد')}</div><div><label class="l">💬 توضیح برای اولیا (برای همه)</label>${gta('nt','توضیح مشترک برای اولیا (اختیاری)')}</div></div>
+ <div class="sgc-f"><label class="l">🔁 تصاویر تمرین (برای همه)</label><div class="sgc-i"><label class="bt g s" style="cursor:pointer">🖼 افزودن عکس<input type="file" class="sgpq" accept="image/*" multiple style="display:none" data-g="${g.id}" data-k="${cur}" data-s="__gen"></label>${sgThumbs(gen.pq,g,cur,'__gen')}</div></div>
+ <div class="acb"><button class="bt" style="background:#6d28d9" data-a="sgApplyAll:${g.id}:${cur}">⬇️ اعمال برای همه (${fd(nTarget)} نفر)</button><button class="bt s g" data-a="sgGPres:${g.id}:${cur}">${pres?'☑':'☐'} فقط حاضرین (غایب‌ها نه)</button><button class="bt s g" data-a="sgGClear:${g.id}:${cur}">🧹 پاک‌کردن این باکس</button></div></div>`;
  const rows=ids.map(i=>{const p=(r.pf||{})[i]||{},at=(r.att||{})[i],pq=p.pq||[];
- return`<tr><td class="s" style="vertical-align:top"><b>${E(stN(i))}</b><div style="margin-top:4px">${at?`<span class="bdg" style="background:${at=='a'?'#fee2e2':at=='l'?'#fef3c7':'#dcfce7'};color:${at=='a'?'#b91c1c':at=='l'?'#b45309':'#15803d'}">${SGAT[at]}</span>`:'<span class="m">حضور ثبت نشده</span>'}</div></td>
- <td id="sgm_${i}" style="vertical-align:top;min-width:92px">${sgMastCell(g,cur,i)}</td>
- <td>${ta(i,'str',p.str,'هر مورد در یک خط')}</td><td>${ta(i,'wk',p.wk,'هر مورد در یک خط')}</td><td>${ta(i,'rc',p.rc,'تکلیف یا توصیه برای جلسه‌ی بعد')}</td><td>${ta(i,'nt',p.nt,'توضیح اضافه برای اولیا (اختیاری)')}</td>
- <td>${ta(i,'desc',p.desc,'خالی = متن خودکار')}<button class="bt g s" style="margin:2px 0 0;width:100%" data-a="sgGen:${g.id}:${cur}:${i}">✨ تولید متن</button></td>
- <td style="vertical-align:top;min-width:200px"><label class="bt g s" style="display:block;margin:0 0 6px;cursor:pointer;text-align:center">🖼 افزودن عکس<input type="file" class="sgpq" accept="image/*" multiple style="display:none" data-g="${g.id}" data-k="${cur}" data-s="${i}"></label><div style="display:flex;flex-wrap:wrap;gap:6px;max-width:210px">${pq.map((id,n)=>`<div style="position:relative">${PQC[id]?`<img src="${PQC[id]}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:8px;border:1px solid var(--l);display:block">`:'<div class="m" style="width:56px;height:56px">…</div>'}<button class="bt r s" style="position:absolute;top:-6px;right:-6px;margin:0;padding:0 6px;font-size:11px;border-radius:50%" data-a="sgPqDel:${g.id}:${cur}:${i}:${n}">✕</button></div>`).join('')}</div>${pq.length?`<div class="m" style="font-size:11.5px">${fd(pq.length)} تصویر</div>`:''}</td>
- <td style="vertical-align:top;min-width:150px"><button class="bt s" style="display:block;width:100%;margin:0 0 5px;background:#6d28d9" data-a="sgImg:${g.id}:${cur}:${i}">🖼 گزارش تصویری</button><button class="bt s g" style="display:block;width:100%;margin:0 0 5px" data-a="sgPdf:${g.id}:${cur}:${i}">📄 ذخیره PDF</button><button class="bt s g" style="display:block;width:100%;margin:0" data-a="sgCopy:${g.id}:${cur}:${i}">📋 کپی متن</button></td></tr>`}).join('');
- return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">برای هر دانش‌آموز یک ردیف؛ همان فیلدهای گزارش عملکرد کلاس خصوصی. هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). آخر هر ردیف گزارش تصویری و PDF همان دانش‌آموز ساخته می‌شود.</p></div><div class="gw"><table class="gt sgt"><thead><tr><th class="s">دانش‌آموز</th><th>🎯 تسلط</th><th>✅ نقاط قوت</th><th>⚠️ نقاط ضعف</th><th>📌 تکلیف و توصیه</th><th>💬 توضیح برای اولیا</th><th>📝 متن توصیفی</th><th>🔁 تصاویر تمرین</th><th>خروجی</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+ return`<div class="k sgc"><div class="sgc-h"><div class="sgc-n"><b>${E(stN(i))}</b>${at?`<span class="bdg" style="background:${at=='a'?'#fee2e2':at=='l'?'#fef3c7':'#dcfce7'};color:${at=='a'?'#b91c1c':at=='l'?'#b45309':'#15803d'}">${SGAT[at]}</span>`:'<span class="m">حضور ثبت نشده</span>'}</div><div class="sgc-m"><div class="m" style="font-size:12px;margin-bottom:2px">🎯 میزان تسلط</div><div id="sgm_${i}">${sgMastCell(g,cur,i)}</div></div></div>
+ <div class="sgc-b"><div class="sgc-g"><div><label class="l" style="color:#15803d">✅ نقاط قوت</label>${ta(i,'str',p.str,'هر مورد در یک خط')}</div><div><label class="l" style="color:#b45309">⚠️ نقاط ضعف</label>${ta(i,'wk',p.wk,'هر مورد در یک خط')}</div></div>
+ <div class="sgc-g sgc-f"><div><label class="l" style="color:#1d4ed8">📌 تکلیف و توصیه</label>${ta(i,'rc',p.rc,'تکلیف یا توصیه برای جلسه‌ی بعد',80)}</div><div><label class="l">💬 توضیح برای اولیا</label>${ta(i,'nt',p.nt,'توضیح اضافه برای اولیا (اختیاری)',80)}</div></div>
+ <div class="sgc-f"><label class="l">📝 متن توصیفی گزارش</label>${ta(i,'desc',p.desc,'خالی = متن خودکار از نقاط قوت و ضعف',120)}<button class="bt g s" style="margin:8px 0 0" data-a="sgGen:${g.id}:${cur}:${i}">✨ تولید متن از نقاط قوت و ضعف</button></div>
+ <div class="sgc-f"><label class="l">🔁 تصاویر نمونه‌سؤال تمرینی</label><div class="sgc-i"><label class="bt g s" style="cursor:pointer">🖼 افزودن عکس<input type="file" class="sgpq" accept="image/*" multiple style="display:none" data-g="${g.id}" data-k="${cur}" data-s="${i}"></label>${sgThumbs(pq,g,cur,i)}${pq.length?`<span class="m">${fd(pq.length)} تصویر</span>`:''}</div></div></div>
+ <div class="sgc-o"><button class="bt s" style="background:#6d28d9" data-a="sgImg:${g.id}:${cur}:${i}">🖼 گزارش تصویری</button><button class="bt s g" data-a="sgPdf:${g.id}:${cur}:${i}">📄 ذخیره PDF</button><button class="bt s g" data-a="sgCopy:${g.id}:${cur}:${i}">📋 کپی متن</button></div></div>`}).join('');
+ return h+`<div class="k"><h3>📝 گزارش عملکرد — ${dlb(cur)}</h3><p class="m">هر چه بنویسید خودکار ذخیره می‌شود. «میزان تسلط» از تعداد نقاط قوت در برابر ضعف خودکار حساب می‌شود (اگر هیچ‌کدام ننوشتید، دستی وارد کنید). موارد مشترک را در باکس بالا بنویسید و برای همه اعمال کنید؛ سپس برای هر دانش‌آموز موارد اختصاصی را در کارت خودش اضافه کنید.</p></div>${gbox}<div class="sgsep">گزارش هر دانش‌آموز (${fd(ids.length)} نفر)</div>${rows}`}
 /* ----- قالب گزارش تصویری نیمه‌خصوصی (رنگ‌بندی بنفش) ----- */
 const sgCARD='background:#fff;border:1px solid #e4d9fb;border-radius:18px;box-shadow:0 6px 18px #5b21b614;',sgWRAP='padding:26px 30px;background:linear-gradient(180deg,#f5f0ff 0,#fff 220px)',
 sgHEAD=t=>HEAD(t).replace(/#0b1745/gi,'#2e1065').replace(/#1e3a8a/gi,'#5b21b6').replace(/#2563eb/gi,'#a855f7'),
@@ -1293,7 +1324,7 @@ sgFn=(g,k,sid)=>'gozaresh-'+stN(sid).replace(/\s+/g,'-')+'-'+k.replace(/\//g,'-'
 async function sgImg(g,k,sid){const p=(((g.ss||{})[k]||{}).pf||{})[sid]||{};await pqPre({pq:p.pq||[]});const b=await mk(()=>htmlImg(sgHtml(g,k,sid),760));if(b)showImg(b,sgFn(g,k,sid)+'.jpg',sgCap(g,k,sid),null,stOf(sid))}
 async function sgPdf(g,k,sid){const p=(((g.ss||{})[k]||{}).pf||{})[sid]||{};await pqPre({pq:p.pq||[]});const b=await mk(()=>htmlImg(sgHtml(g,k,sid),760));if(!b)return;try{dlFile(new File([await blobToPdf(b)],sgFn(g,k,sid)+'.pdf',{type:'application/pdf'}));toast('✓ PDF ساخته و ذخیره شد (معمولاً پوشه‌ی دانلودها)')}catch(e){toast('ساخت PDF ناموفق بود.')}}
 async function sgPqIn(inp){const g=sgOf(inp.dataset.g),k=inp.dataset.k,sid=inp.dataset.s,fs=[...(inp.files||[])].filter(f=>/^image\//i.test(f.type)||/\.(jpe?g|png|webp|heic|heif|gif|bmp)$/i.test(f.name));inp.value='';if(!g||!fs.length)return;
- const R=sgRec(g,k);R.pf=R.pf||{};const p=R.pf[sid]=R.pf[sid]||{};p.pq=p.pq||[];let ok=0,bad=0;
+ const R=sgRec(g,k);R.pf=R.pf||{};const p=sid=='__gen'?(R.gen=R.gen||{}):(R.pf[sid]=R.pf[sid]||{});p.pq=p.pq||[];let ok=0,bad=0;
  for(let i=0;i<fs.length;i++){toast('در حال افزودن تصویر '+fd(i+1)+' از '+fd(fs.length)+'…');try{const u=await pqFile(fs[i]),id=uid();await pqPut(id,u);p.pq.push(id);ok++}catch(e){bad++}}
  save();if(V=='sgv'){const y=scrollY;render();scrollTo(0,y)}toast(bad?(ok?'✓ '+fd(ok)+' تصویر اضافه شد؛ '+fd(bad)+' تصویر ذخیره نشد.':'تصویر خوانده یا ذخیره نشد. دوباره تلاش کنید.'):'✓ '+fd(ok)+' تصویر اضافه شد')}
 function sgTabPay(g){const ids=(g.sids||[]).filter(stOf),fee=sgFee(g);let tot=fee*ids.length,got=0;ids.forEach(i=>{const p=sgPay(g,i);got+=fee>0&&p.st=='f'&&!p.paid?fee:p.paid});
@@ -1309,6 +1340,7 @@ const sgCp=t=>(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reje
 document.addEventListener('input',e=>{const t=e.target,w=t.dataset&&t.dataset.sgi;if(!w)return;const g=sgOf(t.dataset.g);if(!g)return;
  if(w=='topic'){sgRec(g,t.dataset.k).topic=t.value}
  else if(w=='pf'){const R=sgRec(g,t.dataset.k);R.pf=R.pf||{};const sid=t.dataset.s,p=R.pf[sid]=R.pf[sid]||{},fl=t.dataset.fl;let v=t.value;if(fl=='mp'){v=String(nd(v)).replace(/[٫,]/g,'.');const n=parseFloat(v);if(!isNaN(n))v=String(Math.max(0,Math.min(100,n)))}p[fl]=v;if(fl=='str'||fl=='wk'){const c=document.getElementById('sgm_'+sid);if(c)c.innerHTML=sgMastCell(g,t.dataset.k,sid)}}
+ else if(w=='gen'){const R=sgRec(g,t.dataset.k);R.gen=R.gen||{};R.gen[t.dataset.fl]=t.value}
  else if(w=='pay'){const d=String(nd(t.value)).replace(/\D/g,'');t.value=mny(d);g.pay=g.pay||{};const p=g.pay[t.dataset.s]=g.pay[t.dataset.s]||{};p.paid=+d||0;const f=sgFee(g);p.st=f>0?(p.paid>=f?'f':p.paid>0?'p':'u'):(p.paid>0?'p':(p.st||'u'))}
  save()});
 document.addEventListener('change',e=>{const t=e.target;if(V=='sgv'){if(t.classList&&t.classList.contains('sgpq')){sgPqIn(t);return}if(t.id=='sgSessSel'){VP.sess=t.value;render();return}
@@ -1337,7 +1369,19 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-a]');if(!t
  if(k=='sgPaySt'){g.pay=g.pay||{};const p=g.pay[a[2]]=g.pay[a[2]]||{};p.st=a[3];const f=sgFee(g);if(a[3]=='f'&&f>0)p.paid=f;if(a[3]=='u')p.paid=0;save();render();scrollTo(0,sy);return}
  if(k=='sgImg')return sgImg(g,a[2],a[3]);if(k=='sgPdf')return sgPdf(g,a[2],a[3]);
  if(k=='sgGen'){const R=sgRec(g,a[2]);R.pf=R.pf||{};const p=R.pf[a[3]]=R.pf[a[3]]||{};if(!sgMast(p)&&!lines(p.str).length&&!lines(p.wk).length&&!lines(p.rc).length)return toast('ابتدا نقاط قوت، ضعف یا توصیه را بنویسید.');p.desc=sgDescr(g,a[2],a[3]);save();render();scrollTo(0,sy);return}
- if(k=='sgPqDel'){const R=sgRec(g,a[2]),p=((R.pf)||{})[a[3]];if(!p||!p.pq)return;if(!confirm('این تصویر حذف شود؟'))return;p.pq.splice(+a[4],1);save();render();scrollTo(0,sy);return}
+ if(k=='sgPqDel'){const R=sgRec(g,a[2]),p=a[3]=='__gen'?R.gen:((R.pf)||{})[a[3]];if(!p||!p.pq)return;if(!confirm('این تصویر حذف شود؟'))return;p.pq.splice(+a[4],1);save();render();scrollTo(0,sy);return}
+
+ if(k=='sgGPres'){VP.sgPres=!VP.sgPres;render();scrollTo(0,sy);return}
+ if(k=='sgGClear'){const R=sgRec(g,a[2]);if(!R.gen||!(lines(R.gen.str).length||lines(R.gen.wk).length||lines(R.gen.rc).length||String(R.gen.nt||'').trim()||(R.gen.pq||[]).length))return toast('باکس عمومی خالی است.');if(!confirm('محتوای باکس عمومی پاک شود؟ (گزارش‌های دانش‌آموزان تغییری نمی‌کند)'))return;delete R.gen;save();render();scrollTo(0,sy);return}
+ if(k=='sgApplyAll'){const R=sgRec(g,a[2]),G=R.gen||{},ids=(g.sids||[]).filter(stOf).filter(i=>!VP.sgPres||((R.att||{})[i]!='a'));
+  const gl={str:lines(G.str),wk:lines(G.wk),rc:lines(G.rc)},nt=String(G.nt||'').trim(),gp=G.pq||[];
+  if(!gl.str.length&&!gl.wk.length&&!gl.rc.length&&!nt&&!gp.length)return toast('ابتدا چیزی در باکس عمومی بنویسید یا عکسی اضافه کنید.');
+  if(!ids.length)return toast('دانش‌آموزی برای اعمال پیدا نشد.');
+  R.pf=R.pf||{};let add=0;
+  ids.forEach(i=>{const p=R.pf[i]=R.pf[i]||{};['str','wk','rc'].forEach(f=>{const cur=lines(p[f]),nw=gl[f].filter(x=>!cur.includes(x));if(nw.length){p[f]=cur.concat(nw).join('\n');add+=nw.length}});
+   if(nt&&!String(p.nt||'').includes(nt)){p.nt=(String(p.nt||'').trim()?String(p.nt).trim()+'\n':'')+nt;add++}
+   if(gp.length){p.pq=p.pq||[];gp.forEach(x=>{if(!p.pq.includes(x)){p.pq.push(x);add++}})}});
+  save();render();scrollTo(0,sy);return toast(add?'✓ برای '+fd(ids.length)+' دانش‌آموز اعمال شد':'همه‌ی این موارد قبلاً برای دانش‌آموزان ثبت شده بود.')}
  if(k=='sgCopy')return sgCp(sgRepText(g,a[2],a[3]));
  if(k=='sgCopyAll'){const ids=(g.sids||[]).filter(stOf);return sgCp(ids.map(i=>sgRepText(g,a[2],i)).join('\n\n────────────\n\n'))}});
 
